@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SpriteBound</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#080d19;--panel:#121a2d;--panel2:#1a2540;--border:#34415f;--text:#fff;--muted:#9da9c2;--cyan:#67e8f9}
+body{font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at 50% 20%,#1d3157,#080d19 60%);color:var(--text);min-height:100vh;overflow:hidden}
+.app{height:100vh;display:flex;flex-direction:column}
+.topbar{height:70px;flex-shrink:0;background:rgba(8,13,25,.96);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 25px;z-index:50}
+.logo{font-size:25px;font-weight:900;letter-spacing:2px}.logo span{color:var(--cyan)}
+.playerStats{display:flex;gap:10px}.stat{background:#1a2540;border:1px solid #34415f;border-radius:10px;padding:9px 13px;font-weight:bold;font-size:14px}
+.main{flex:1;position:relative;overflow:hidden}.screen{position:absolute;inset:0;display:none;overflow-y:auto;padding:35px;padding-bottom:120px}.screen.active{display:block}
+.homeContainer,.dexHeader,.dexGrid,.clanContainer{max-width:1200px;margin:auto}
+.hero{min-height:310px;border-radius:25px;padding:40px;background:radial-gradient(circle at 75% 30%,rgba(103,232,249,.25),transparent 30%),linear-gradient(135deg,#18284b,#11182c);border:1px solid #3b4c76;display:flex;align-items:center;justify-content:space-between}
+.heroText{max-width:620px}.hero h1{font-size:clamp(38px,5vw,64px);line-height:1;margin-bottom:18px}.hero h1 span{color:var(--cyan)}.hero p{color:#b8c2da;font-size:17px;line-height:1.6}
+.heroOrb{width:210px;height:210px;border-radius:50%;background:radial-gradient(circle at 35% 30%,white,#67e8f9 15%,#3975d6 45%,transparent 70%);animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
+.homeGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:22px}.homeCard{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:23px}.homeCard h3{margin-bottom:12px}.bigNumber{font-size:32px;font-weight:900}.muted{color:var(--muted)}
+.progress{height:10px;background:#2c3651;border-radius:20px;overflow:hidden;margin-top:12px}.progressFill{height:100%;width:0%;background:linear-gradient(90deg,#67e8f9,#7c5cff);transition:width .5s}
+.chestScreen{text-align:center;background:radial-gradient(circle at 50% 45%,rgba(83,115,207,.2),transparent 35%)}.screenTitle{font-size:35px;font-weight:900;margin-bottom:6px}.screenSubtitle{color:var(--muted)}
+.chestArea{min-height:500px;display:flex;align-items:center;justify-content:center}.chestContainer{width:280px;height:280px;position:relative;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.chestGlow{position:absolute;width:300px;height:300px;border-radius:50%;filter:blur(35px);opacity:.25;transition:.4s}
+.chestBody{width:210px;height:150px;position:relative;animation:chestFloat 2.5s ease-in-out infinite}@keyframes chestFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.chestBottom{position:absolute;bottom:0;width:210px;height:105px;border-radius:15px 15px 22px 22px;background:linear-gradient(135deg,#8e552f,#c17b3e,#704023);border:6px solid #422715;box-shadow:inset 0 5px 0 rgba(255,255,255,.12),0 20px 35px rgba(0,0,0,.45)}
+.chestLid{position:absolute;left:-2px;top:10px;width:214px;height:72px;border-radius:45px 45px 10px 10px;background:linear-gradient(135deg,#a76537,#d38a49,#754325);border:6px solid #422715;transform-origin:bottom center;transition:transform .8s cubic-bezier(.2,.8,.2,1);z-index:3}
+.chestLock{position:absolute;z-index:5;width:42px;height:48px;left:84px;top:76px;background:#f5c84c;border:5px solid #765315;border-radius:8px}.chestLock:before{content:"";position:absolute;width:18px;height:18px;border:5px solid #765315;border-radius:50%;left:7px;top:-16px}
+.chestContainer.opening .chestLid{transform:rotateX(125deg)}.chestContainer.shaking .chestBody{animation:shake .12s infinite}
+@keyframes shake{0%{transform:translateX(-7px)}50%{transform:translateX(7px)}100%{transform:translateX(-7px)}}
+.openText{position:absolute;bottom:-10px;left:0;right:0;font-weight:bold;letter-spacing:1px}.chestHint{color:#8591ad}
+.overlay{position:fixed;inset:0;background:rgba(3,6,15,.92);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:200}.overlay.show{display:flex}
+.resultBox{width:min(520px,92vw);text-align:center}.resultStage{font-size:13px;letter-spacing:4px;font-weight:900;color:var(--cyan);margin-bottom:15px}
+.resultSprite{width:260px;height:260px;margin:auto;border-radius:50%;background:radial-gradient(circle at 35% 25%,white,rgba(255,255,255,.22) 10%,transparent 35%),#1d2945;border:3px solid rgba(255,255,255,.7);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;animation:reveal .8s cubic-bezier(.2,1.5,.4,1)}
+.resultSprite img{width:88%;height:88%;object-fit:contain;filter:drop-shadow(0 18px 20px rgba(0,0,0,.35))}
+@keyframes variantPulse{0%{transform:scale(.65);opacity:.4}65%{transform:scale(1.12);opacity:1}100%{transform:scale(1);opacity:1}}@keyframes reveal{0%{transform:scale(.1) rotate(-20deg);opacity:0}70%{transform:scale(1.12) rotate(5deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+.resultName{font-size:40px;font-weight:900;margin-top:18px}.resultVariant{font-size:24px;font-weight:900;margin-top:8px}.resultRarity{display:inline-block;margin-top:12px;padding:7px 18px;border-radius:20px;font-weight:bold}.resultDescription{color:#aab5ce;margin:15px auto 25px}.continueButton{border:none;background:var(--cyan);color:#071019;padding:14px 35px;border-radius:12px;font-weight:900;font-size:16px;cursor:pointer}
+.Uncommon{background:#27ae60;color:#fff}.Rare{background:#3284d6;color:#fff}.Epic{background:#8744d1;color:#fff}.Legendary{background:linear-gradient(90deg,#e7a719,#ffe27a);color:#3d2700}.Mythic{background:linear-gradient(90deg,#f3bd34,#fff1a1,#f5b72d);color:#4b3100;box-shadow:0 0 20px rgba(255,215,80,.6)}
+.dexStats{margin:20px 0;background:var(--panel);border:1px solid var(--border);padding:18px;border-radius:15px}.dexGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:15px}
+.dexCard{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:15px;min-height:260px;text-align:center;transition:.15s}.dexCard:hover{transform:translateY(-4px)}
+.dexIcon{height:130px;display:flex;align-items:center;justify-content:center;margin-bottom:8px}.dexIcon img{width:125px;height:125px;object-fit:contain;filter:drop-shadow(0 10px 12px rgba(0,0,0,.35))}
+.dexName{font-size:18px;font-weight:900}.variantList{margin-top:12px;display:flex;flex-wrap:wrap;gap:5px;justify-content:center}.variantTag{font-size:10px;padding:4px 7px;border-radius:8px;background:#293550}.variantTag.owned{background:#284f3b;color:#76f0a7}.variantTag.locked{opacity:.35}
+.clanHero{background:linear-gradient(135deg,#18294d,#131b31);border:1px solid #3b4b70;border-radius:24px;padding:45px;text-align:center}.clanIcon{font-size:75px}.clanHero h1{font-size:40px;margin:10px}.clanHero p{color:var(--muted);line-height:1.6;max-width:600px;margin:auto}.comingSoon{display:inline-block;margin-top:25px;background:#263552;border:1px solid #43557d;border-radius:20px;padding:8px 16px;font-weight:bold}.futureFeatures{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:20px}.futureCard{background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:20px;text-align:center}.futureCard div{font-size:35px;margin-bottom:10px}
+.bottomNav{height:82px;flex-shrink:0;background:rgba(8,13,25,.98);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(4,1fr);z-index:100}.navButton{background:transparent;border:none;color:#77839f;cursor:pointer;font-size:13px;font-weight:bold}.navIcon{display:block;font-size:26px;margin-bottom:4px}.navButton.active{color:var(--cyan)}
+.variant-normal{filter:none}.variant-gold{filter:saturate(1.45) sepia(.65) hue-rotate(355deg) brightness(1.12)}.variant-gummy{filter:saturate(1.8) brightness(1.15) hue-rotate(315deg)}.variant-galaxy{filter:saturate(1.6) hue-rotate(210deg) brightness(1.1) drop-shadow(0 0 18px #a98cff)}.variant-cube{filter:saturate(1.25) hue-rotate(175deg) brightness(1.05) drop-shadow(0 0 20px #65e8ff)}.variant-gem{filter:saturate(1.7) brightness(1.18) hue-rotate(25deg) drop-shadow(0 0 24px #fff08a)}
+@media(max-width:700px){.topbar{padding:0 12px;height:60px}.logo{font-size:18px}.stat{padding:7px;font-size:11px}.screen{padding:20px 15px 110px}.hero{padding:25px}.heroOrb{width:120px;height:120px}.homeGrid,.futureFeatures{grid-template-columns:1fr}.resultSprite{width:230px;height:230px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+  <div class="logo">SPRITE<span>BOUND</span></div>
+  <div class="playerStats">
+    <div class="stat">⭐ Lv. <span id="level">1</span></div>
+    <div class="stat">🪙 <span id="coins">100</span></div>
+    <div class="stat">📖 <span id="collectionCount">0</span></div>
+  </div>
+</header>
+
+<main class="main">
+<section class="screen active" id="homeScreen">
+  <div class="homeContainer">
+    <div class="hero">
+      <div class="heroText">
+        <h1>Welcome to <span>SpriteBound</span></h1>
+        <p>Open Sprite Chests, discover rare variants and complete your SpriteDex.</p>
+      </div>
+      <div class="heroOrb"></div>
+    </div>
+    <div class="homeGrid">
+      <div class="homeCard">
+        <h3>📖 SpriteDex</h3>
+        <div class="bigNumber"><span id="homeCollection">0</span></div>
+        <div class="muted">Variants collected</div>
+        <div class="progress"><div class="progressFill" id="homeProgress"></div></div>
+      </div>
+      <div class="homeCard">
+        <h3>⭐ Level</h3>
+        <div class="bigNumber"><span id="homeLevel">1</span></div>
+        <div class="muted">Collect Sprites to earn XP.</div>
+      </div>
+      <div class="homeCard">
+        <h3>🎁 Chest</h3>
+        <div class="bigNumber">OPEN</div>
+        <div class="muted">Discover your next Sprite.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="screen chestScreen" id="chestScreen">
+  <h1 class="screenTitle">Sprite Chest</h1>
+  <p class="screenSubtitle">What will you discover?</p>
+  <div class="chestArea">
+    <div class="chestContainer" id="chestContainer" onclick="openChest()">
+      <div class="chestGlow" id="chestGlow"></div>
+      <div class="chestBody">
+        <div class="chestLid"></div>
+        <div class="chestBottom"></div>
+        <div class="chestLock"></div>
+      </div>
+      <div class="openText">TAP TO OPEN</div>
+    </div>
+  </div>
+  <div class="chestHint">The Sprite rarity is determined first. The variant is rolled separately.</div>
+</section>
+
+<section class="screen" id="dexScreen">
+  <div class="dexHeader">
+    <h1 class="screenTitle">📖 SpriteDex</h1>
+    <p class="screenSubtitle">Collect every Sprite and every variant.</p>
+    <div class="dexStats">
+      <strong>Variants: <span id="dexProgress">0</span></strong>
+      <div class="progress"><div class="progressFill" id="dexProgressBar"></div></div>
+    </div>
+  </div>
+  <div class="dexGrid" id="dexGrid"></div>
+</section>
+
+<section class="screen" id="clanScreen">
+  <div class="clanContainer">
+    <div class="clanHero">
+      <div class="clanIcon">👥</div>
+      <h1>Clans</h1>
+      <p>Create or join a clan, chat with other collectors and eventually trade duplicate Sprites.</p>
+      <div class="comingSoon">COMING SOON</div>
+    </div>
+    <div class="futureFeatures">
+      <div class="futureCard"><div>💬</div><strong>Clan Chat</strong><p class="muted">Talk with your clan.</p></div>
+      <div class="futureCard"><div>🔄</div><strong>Trading</strong><p class="muted">Trade duplicate variants.</p></div>
+      <div class="futureCard"><div>🏆</div><strong>Clan Rankings</strong><p class="muted">Compete with other clans.</p></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<nav class="bottomNav">
+  <button class="navButton active" onclick="switchScreen('home',this)"><span class="navIcon">🏠</span>Home</button>
+  <button class="navButton" onclick="switchScreen('chest',this)"><span class="navIcon">🎁</span>Chest</button>
+  <button class="navButton" onclick="switchScreen('dex',this)"><span class="navIcon">📖</span>SpriteDex</button>
+  <button class="navButton" onclick="switchScreen('clan',this)"><span class="navIcon">👥</span>Clan</button>
+</nav>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="resultBox">
+    <div class="resultStage" id="resultStage">SPRITE DISCOVERED</div>
+    <div class="resultSprite" id="resultSprite"></div>
+    <div class="resultName" id="resultName">Water Sprite</div>
+    <div class="resultVariant" id="resultVariant">???</div>
+    <div class="resultRarity" id="resultRarity">Rare</div>
+    <div class="resultDescription" id="resultDescription"></div>
+    <button class="continueButton" id="continueButton" onclick="continueResult()">Reveal Variant</button>
+  </div>
+</div>
+
+<script>
+const sprites = [
+  {id:"water",name:"Water Sprite",image:"images/water.png",rarity:"Rare",description:"A playful water Sprite."},
+  {id:"earth",name:"Earth Sprite",image:"images/earth.png",rarity:"Uncommon",description:"A small Sprite connected to the earth."},
+  {id:"fire",name:"Fire Sprite",image:"images/fire.png",rarity:"Uncommon",description:"A fiery little Sprite."},
+  {id:"duck",name:"Duck Sprite",image:"images/duck.png",rarity:"Rare",description:"A strange but cheerful duck Sprite."},
+  {id:"ghost",name:"Ghost Sprite",image:"images/ghost.png",rarity:"Rare",description:"A mysterious ghostly Sprite."},
+  {id:"dream",name:"Dream Sprite",image:"images/dream.png",rarity:"Epic",description:"A mysterious Sprite from the dream realm."},
+  {id:"demon",name:"Demon Sprite",image:"images/demon.png",rarity:"Rare",description:"Upload the Demon Sprite image to unlock this Sprite."},
+  {id:"king",name:"King Sprite",image:"images/king.png",rarity:"Rare",description:"Upload the King Sprite image to unlock this Sprite."},
+  {id:"punk",name:"Punk Sprite",image:"images/punk.png",rarity:"Epic",description:"Upload the Punk Sprite image to unlock this Sprite."},
+  {id:"zero",name:"Zero Point Sprite",image:"images/Zeropoint.png",rarity:"Legendary",description:"Upload the Zero Point Sprite image to unlock this Sprite."}
+];
+
+const variants = [
+  {id:"normal",name:"Normal",chance:70,rarity:"Base",className:"variant-normal"},
+  {id:"gold",name:"Gold",chance:12,rarity:"Rare",className:"variant-gold"},
+  {id:"gummy",name:"Gummy",chance:5,rarity:"Epic",className:"variant-gummy"},
+  {id:"galaxy",name:"Galaxy",chance:3,rarity:"Legendary",className:"variant-galaxy"},
+  {id:"gem",name:"Gem",chance:.4,rarity:"Mythic",className:"variant-gem"}
+];
+
+let game={level:1,coins:100,xp:0,collection:[]};
+let currentSprite=null,currentVariant=null,chestBusy=false;
+
+function saveGame(){localStorage.setItem("spriteBoundSave",JSON.stringify(game))}
+function loadGame(){
+  const saved=localStorage.getItem("spriteBoundSave");
+  if(!saved)return;
+  try{
+    const d=JSON.parse(saved);
+    game.level=d.level||1; game.coins=d.coins??100; game.xp=d.xp||0; game.collection=d.collection||[];
+  }catch(e){}
+}
+
+function switchScreen(screen,button){
+  document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));
+  document.getElementById(screen+"Screen").classList.add("active");
+  document.querySelectorAll(".navButton").forEach(x=>x.classList.remove("active"));
+  button.classList.add("active");
+  if(screen==="dex")renderDex();
+}
+
+function chooseSprite(){
+  const available=sprites.filter(s=>s.image);
+  const roll=Math.random()*100;
+  let rarity=roll<55?"Uncommon":roll<83?"Rare":roll<95?"Epic":"Legendary";
+  let possible=available.filter(s=>s.rarity===rarity);
+  if(!possible.length)possible=available;
+  return possible[Math.floor(Math.random()*possible.length)];
+}
+
+function chooseVariant(){
+  const roll=Math.random()*100;
+  let total=0;
+  for(const v of variants){total+=v.chance;if(roll<total)return v}
+  return variants[0];
+}
+
+function openChest(){
+  if(chestBusy)return;
+  chestBusy=true;
+  currentSprite=chooseSprite();
+  currentVariant=null;
+  const chest=document.getElementById("chestContainer");
+  document.getElementById("chestGlow").style.background=rarityColour(currentSprite.rarity);
+  document.getElementById("chestGlow").style.opacity=".65";
+  chest.classList.add("shaking");
+  setTimeout(()=>{chest.classList.remove("shaking");chest.classList.add("opening")},1000);
+  setTimeout(showSpriteReveal,1800);
+}
+
+function showSpriteReveal(){
+  const overlay=document.getElementById("overlay");
+  document.getElementById("resultStage").textContent="SPRITE DISCOVERED";
+  document.getElementById("resultName").textContent=currentSprite.name;
+  document.getElementById("resultVariant").textContent="???";
+  document.getElementById("resultRarity").textContent=currentSprite.rarity;
+  document.getElementById("resultRarity").className="resultRarity "+currentSprite.rarity;
+  document.getElementById("resultDescription").textContent=currentSprite.description;
+  document.getElementById("continueButton").textContent="Reveal Variant";
+  const box=document.getElementById("resultSprite");
+  box.innerHTML="";
+  const img=document.createElement("img");
+  img.src=currentSprite.image;
+  img.alt=currentSprite.name;
+  box.appendChild(img);
+  overlay.classList.add("show");
+}
+
+function continueResult(){
+  if(!currentVariant){currentVariant=chooseVariant();revealVariant();return}
+  finishChest();
+}
+
+function revealVariant(){
+  const stage=document.getElementById("resultStage");
+  const variantEl=document.getElementById("resultVariant");
+  const rarityEl=document.getElementById("resultRarity");
+  const button=document.getElementById("continueButton");
+  const box=document.getElementById("resultSprite");
+  const img=box.querySelector("img");
+  if(img){
+    img.className=currentVariant.className;
+    img.style.animation="none";
+    requestAnimationFrame(()=>img.style.animation="variantPulse .9s ease-out");
+  }
+  variantEl.textContent=currentVariant.name==="Normal"?"Normal Variant":currentVariant.name+" Variant";
+  if(currentVariant.rarity==="Base"){
+    rarityEl.textContent=currentSprite.rarity;
+    rarityEl.className="resultRarity "+currentSprite.rarity;
+  }else{
+    rarityEl.textContent=currentVariant.rarity+" Variant";
+    rarityEl.className="resultRarity "+currentVariant.rarity;
+  }
+  const titles={gold:"🟡 GOLD VARIANT!",gummy:"🍬 GUMMY VARIANT!",galaxy:"🌌 GALAXY VARIANT!",cube:"🧊 CUBE VARIANT!",gem:"💎 MYTHIC GEM VARIANT!"};
+  stage.textContent=titles[currentVariant.id]||"SPRITE DISCOVERED";
+  button.textContent="Collect";
+  const collectionID=currentSprite.id+"_"+currentVariant.id;
+  if(!game.collection.includes(collectionID)){
+    game.collection.push(collectionID);
+    rewardForVariant(currentVariant);
+    saveGame();
+    updateUI();
+  }
+}
+
+function finishChest(){
+  document.getElementById("overlay").classList.remove("show");
+  document.getElementById("chestContainer").classList.remove("opening");
+  document.getElementById("chestGlow").style.opacity=".25";
+  currentSprite=null;currentVariant=null;chestBusy=false;
+}
+
+function rewardForVariant(v){
+  const rewards={normal:[5,10],gold:[20,30],gummy:[50,70],galaxy:[150,150],cube:[500,400],gem:[2000,1000]};
+  const [coins,xp]=rewards[v.id];
+  game.coins+=coins;addXP(xp);
+}
+
+function addXP(amount){
+  game.xp+=amount;
+  let needed=game.level*100;
+  while(game.xp>=needed){game.xp-=needed;game.level++;needed=game.level*100}
+}
+
+function rarityColour(r){
+  return {Uncommon:"#27ae60",Rare:"#3284d6",Epic:"#8744d1",Legendary:"#e7b52f",Mythic:"#fff0a0"}[r]||"#67e8f9";
+}
+
+function totalCollectionSize(){return sprites.filter(s=>s.image).length*variants.length}
+
+function updateUI(){
+  const total=totalCollectionSize(),collected=game.collection.length,pct=total?collected/total*100:0;
+  document.getElementById("level").textContent=game.level;
+  document.getElementById("coins").textContent=game.coins;
+  document.getElementById("collectionCount").textContent=collected;
+  document.getElementById("homeCollection").textContent=collected;
+  document.getElementById("homeLevel").textContent=game.level;
+  document.getElementById("homeProgress").style.width=pct+"%";
+  document.getElementById("dexProgress").textContent=collected+" / "+total;
+  document.getElementById("dexProgressBar").style.width=pct+"%";
+}
+
+function renderDex(){
+  const grid=document.getElementById("dexGrid");grid.innerHTML="";
+  sprites.forEach(sprite=>{
+    const card=document.createElement("div");card.className="dexCard";
+    let variantsHTML="";
+    variants.forEach(v=>{
+      const owned=game.collection.includes(sprite.id+"_"+v.id);
+      variantsHTML+=`<span class="variantTag ${owned?"owned":"locked"}">${v.name}</span>`;
+    });
+    let count=variants.filter(v=>game.collection.includes(sprite.id+"_"+v.id)).length;
+    let visual=sprite.image
+      ? `<img src="${sprite.image}" alt="${sprite.name}">`
+      : `<div style="font-size:55px;opacity:.25">?</div>`;
+    card.innerHTML=`
+      <div class="dexIcon">${visual}</div>
+      <div class="dexName">${sprite.name}</div>
+      <div class="resultRarity ${sprite.rarity}" style="font-size:11px;padding:5px 9px;margin-top:8px">${sprite.rarity}</div>
+      <div class="muted" style="margin-top:10px;font-size:12px">${sprite.image?count:0} / ${variants.length} variants</div>
+      <div class="variantList">${variantsHTML}</div>`;
+    grid.appendChild(card);
+  });
+}
+
+loadGame();updateUI();renderDex();setInterval(saveGame,10000);
+</script>
+</body>
+</html>
