@@ -45,6 +45,14 @@ body{font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at
 .bottomNav{height:82px;flex-shrink:0;background:rgba(8,13,25,.98);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(4,1fr);z-index:100}.navButton{background:transparent;border:none;color:#77839f;cursor:pointer;font-size:13px;font-weight:bold}.navIcon{display:block;font-size:26px;margin-bottom:4px}.navButton.active{color:var(--cyan)}
 .variant-normal{filter:none}.variant-gold{filter:saturate(1.45) sepia(.65) hue-rotate(355deg) brightness(1.12)}.variant-gummy{filter:saturate(1.8) brightness(1.15) hue-rotate(315deg)}.variant-galaxy{filter:saturate(1.6) hue-rotate(210deg) brightness(1.1) drop-shadow(0 0 18px #a98cff)}.variant-cube{filter:saturate(1.25) hue-rotate(175deg) brightness(1.05) drop-shadow(0 0 20px #65e8ff)}.variant-gem{filter:saturate(1.7) brightness(1.18) hue-rotate(25deg) drop-shadow(0 0 24px #fff08a)}
 @media(max-width:700px){.topbar{padding:0 12px;height:60px}.logo{font-size:18px}.stat{padding:7px;font-size:11px}.screen{padding:20px 15px 110px}.hero{padding:25px}.heroOrb{width:120px;height:120px}.homeGrid,.futureFeatures{grid-template-columns:1fr}.resultSprite{width:230px;height:230px}}
+.chestImage {
+    width: 220px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    object-fit: contain;
+    animation: chestFloat 2.5s ease-in-out infinite;
+}
 </style>
 </head>
 <body>
@@ -95,11 +103,7 @@ body{font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at
   <div class="chestArea">
     <div class="chestContainer" id="chestContainer" onclick="openChest()">
       <div class="chestGlow" id="chestGlow"></div>
-      <div class="chestBody">
-        <div class="chestLid"></div>
-        <div class="chestBottom"></div>
-        <div class="chestLock"></div>
-      </div>
+      <img src="images/chest.png" class="chestImage" id="chestImage" alt="Sprite Chest">
       <div class="openText">TAP TO OPEN</div>
     </div>
   </div>
