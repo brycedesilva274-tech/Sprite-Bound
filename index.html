@@ -470,7 +470,13 @@ function addXP(amount){
 }
 
 function rarityColour(r){
-  return {Uncommon:"#27ae60",Rare:"#3284d6",Epic:"#8744d1",Legendary:"#e7b52f",Mythic:"#fff0a0"}[r]||"#67e8f9";
+  return {
+    uncommon:"#27ae60",
+    rare:"#3284d6",
+    epic:"#8744d1",
+    legendary:"#e7b52f",
+    mythic:"#fff0a0"
+  }[r.toLowerCase()] || "#67e8f9";
 }
 
 function totalCollectionSize(){return sprites.filter(s=>s.image).length*variants.length}
