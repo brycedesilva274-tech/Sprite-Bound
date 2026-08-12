@@ -372,7 +372,7 @@ function claimDailyReward(){
     alert("You've already claimed your reward! 🔒\nCome back in about "+hours+" hours.");
     return;
   }
-
+ 
   game.keys+=3;
   game.lastDailyReward=now;
 
@@ -388,6 +388,31 @@ function switchScreen(screen,button){
   document.querySelectorAll(".navButton").forEach(x=>x.classList.remove("active"));
   button.classList.add("active");
   if(screen==="dex")renderDex();
+}
+
+function updateDailyReward(){
+  const button=document.getElementById("dailyRewardButton");
+  const text=document.getElementById("dailyRewardText");
+
+  if(!button || !text)return;
+
+  const now=Date.now();
+  const oneDay=24*60*60*1000;
+
+  if(now-game.lastDailyReward >= oneDay){
+    button.disabled=false;
+    button.textContent="Claim +3 Keys";
+    text.textContent="Your daily reward is ready! 🎁";
+    button.style.opacity="1";
+  }else{
+    const remaining=oneDay-(now-game.lastDailyReward);
+    const hours=Math.ceil(remaining/(60*60*1000));
+
+    button.disabled=true;
+    button.textContent="Already Claimed";
+    text.textContent="Come back in about "+hours+" hours.";
+    button.style.opacity=".5";
+  }
 }
 
 function chooseSprite(){
