@@ -378,14 +378,38 @@ function chooseVariant(){
 
 function openChest(){
   if(chestBusy)return;
+
+  // Check if the player has a key
+  if(game.keys <= 0){
+    alert("You don't have any keys! 🔑");
+    return;
+  }
+
+  // Spend one key
+  game.keys--;
+
+  // Update the UI and save
+  updateUI();
+  saveGame();
+
   chestBusy=true;
   currentSprite=chooseSprite();
   currentVariant=null;
+
   const chest=document.getElementById("chestContainer");
-  document.getElementById("chestGlow").style.background=rarityColour(currentSprite.rarity);
+
+  document.getElementById("chestGlow").style.background=
+    rarityColour(currentSprite.rarity);
+
   document.getElementById("chestGlow").style.opacity=".65";
+
   chest.classList.add("shaking");
-  setTimeout(()=>{chest.classList.remove("shaking");chest.classList.add("opening")},1000);
+
+  setTimeout(()=>{
+    chest.classList.remove("shaking");
+    chest.classList.add("opening");
+  },1000);
+
   setTimeout(showSpriteReveal,1800);
 }
 
