@@ -596,7 +596,13 @@ function renderDex(){
   });
 }
 
-loadGame();updateUI();renderDex();setInterval(saveGame,10000);
+loadGame();
+updateUI();
+renderDex();
+updateDailyReward();
+
+setInterval(saveGame,10000);
+setInterval(updateDailyReward,60000);
 </script>
 </body>
 </html>
