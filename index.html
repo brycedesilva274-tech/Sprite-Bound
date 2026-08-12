@@ -261,29 +261,33 @@ function revealVariant(){
   const button=document.getElementById("continueButton");
   const box=document.getElementById("resultSprite");
   const img=box.querySelector("img");
+
   if(img){
-    img.className=currentVariant.className;
+    let baseImage=currentSprite.image;
+    let variantImage;
+
+    if(currentVariant.id==="normal"){
+      variantImage=baseImage;
+    } else {
+      variantImage=baseImage.replace(/\.png$/i, "-" + currentVariant.id + ".png");
+    }
+
+    img.src=variantImage;
+    img.alt=currentSprite.name + " - " + currentVariant.name;
+
+    img.className="";
     img.style.animation="none";
-    requestAnimationFrame(()=>img.style.animation="variantPulse .9s ease-out");
+
+    requestAnimationFrame(()=>{
+      img.style.animation="variantPulse .9s ease-out";
+    });
   }
-  variantEl.textContent=currentVariant.name==="Normal"?"Normal Variant":currentVariant.name+" Variant";
-  if(currentVariant.rarity==="Base"){
-    rarityEl.textContent=currentSprite.rarity;
-    rarityEl.className="resultRarity "+currentSprite.rarity;
-  }else{
-    rarityEl.textContent=currentVariant.rarity+" Variant";
-    rarityEl.className="resultRarity "+currentVariant.rarity;
-  }
-  const titles={gold:"🟡 GOLD VARIANT!",gummy:"🍬 GUMMY VARIANT!",galaxy:"🌌 GALAXY VARIANT!",cube:"🧊 CUBE VARIANT!",gem:"💎 MYTHIC GEM VARIANT!"};
-  stage.textContent=titles[currentVariant.id]||"SPRITE DISCOVERED";
-  button.textContent="Collect";
-  const collectionID=currentSprite.id+"_"+currentVariant.id;
-  if(!game.collection.includes(collectionID)){
-    game.collection.push(collectionID);
-    rewardForVariant(currentVariant);
-    saveGame();
-    updateUI();
-  }
+
+  stage.textContent="VARIANT DISCOVERED";
+  variantEl.textContent=currentVariant.name;
+  rarityEl.textContent=currentVariant.rarity;
+  rarityEl.className="resultRarity "+currentVariant.rarity;
+  button.textContent="Continue";
 }
 
 function finishChest(){
