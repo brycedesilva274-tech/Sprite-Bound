@@ -56,12 +56,15 @@ body{font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at
 </style>
 </head>
 <body>
-<div class="playerStats">
-  <div class="stat">⭐ Lv. <span id="level">1</span></div>
-  <div class="stat">🪙 <span id="coins">100</span></div>
-  <div class="stat">🗝️ <span id="keys">10</span></div>
-  <div class="stat">📖 <span id="collectionCount">0</span></div>
-</div>
+<header class="topbar">
+  <div class="logo">SPRITE<span>BOUND</span></div>
+
+  <div class="playerStats">
+    <div class="stat">⭐ Lv. <span id="level">1</span></div>
+    <div class="stat">🪙 <span id="coins">100</span></div>
+    <div class="stat">🗝️ <span id="keys">10</span></div>
+    <div class="stat">📖 <span id="collectionCount">0</span></div>
+  </div>
 </header>
 
 <main class="main">
@@ -331,9 +334,17 @@ function saveGame(){localStorage.setItem("spriteBoundSave",JSON.stringify(game))
 function loadGame(){
   const saved=localStorage.getItem("spriteBoundSave");
   if(!saved)return;
+
   try{
     const d=JSON.parse(saved);
-    game.level=d.level||1; game.coins=d.coins??100; game.xp=d.xp||0; game.collection=d.collection||[];
+
+    game.level=d.level||1;
+    game.coins=d.coins??100;
+    game.xp=d.xp||0;
+    game.keys=d.keys??10;
+    game.dust=d.dust??0;
+    game.collection=d.collection||[];
+
   }catch(e){}
 }
 
