@@ -361,6 +361,27 @@ game.lastDailyReward=d.lastDailyReward||0;
   }catch(e){}
 }
 
+function claimDailyReward(){
+  const now=Date.now();
+  const oneDay=24*60*60*1000;
+
+  if(now-game.lastDailyReward < oneDay){
+    const remaining=oneDay-(now-game.lastDailyReward);
+    const hours=Math.ceil(remaining/(60*60*1000));
+
+    alert("You've already claimed your reward! 🔒\nCome back in about "+hours+" hours.");
+    return;
+  }
+
+  game.keys+=3;
+  game.lastDailyReward=now;
+
+  saveGame();
+  updateUI();
+  updateDailyReward();
+
+  alert("Daily Reward Claimed! 🎁\n+3 Keys 🔑");
+}
 function switchScreen(screen,button){
   document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));
   document.getElementById(screen+"Screen").classList.add("active");
