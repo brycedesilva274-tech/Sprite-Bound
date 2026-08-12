@@ -161,18 +161,156 @@ body{font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at
 
 <script>
 const sprites = [
-  {id:"water",name:"Water Sprite",image:"water.png",rarity:"Rare",description:"A playful water Sprite."},
-  {id:"earth",name:"Earth Sprite",image:"earth.png",rarity:"Uncommon",description:"A small Sprite connected to the earth."},
-  {id:"fire",name:"Fire Sprite",image:"fire.png",rarity:"Uncommon",description:"A fiery little Sprite."},
-  {id:"duck",name:"Duck Sprite",image:"duck.png",rarity:"Rare",description:"A strange but cheerful duck Sprite."},
-  {id:"ghost",name:"Ghost Sprite",image:"ghost.png",rarity:"Rare",description:"A mysterious ghostly Sprite."},
-  {id:"dream",name:"Dream Sprite",image:"dream.png",rarity:"Epic",description:"A mysterious Sprite from the dream realm."},
-  {id:"demon",name:"Demon Sprite",image:"demon.png",rarity:"Rare",description:"Upload the Demon Sprite image to unlock this Sprite."},
-  {id:"king",name:"King Sprite",image:"king.png",rarity:"Rare",description:"Upload the King Sprite image to unlock this Sprite."},
-  {id:"punk",name:"Punk Sprite",image:"punk.png",rarity:"Epic",description:"Upload the Punk Sprite image to unlock this Sprite."},
-  {id:"zero",name:"Zero Point Sprite",image:"Zeropoint.png",rarity:"Legendary",description:"Upload the Zero Point Sprite image to unlock this Sprite."}
-];
+  {
+    id:"water",
+    name:"Water Sprite",
+    image:"images/water.png",
+    rarity:"Rare",
+    description:"A playful water Sprite.",
+    variants:{
+      normal:"images/water.png",
+      gold:"images/water-gold.png",
+      gummy:"images/water-gummy.png",
+      galaxy:"images/water-galaxy.png",
+      gem:"images/water-gem.png"
+    }
+  },
 
+  {
+    id:"earth",
+    name:"Earth Sprite",
+    image:"images/earth.png",
+    rarity:"Uncommon",
+    description:"A small Sprite connected to the earth.",
+    variants:{
+      normal:"images/earth.png",
+      gold:"images/earth-gold.png",
+      gummy:"images/earth-gummy.png",
+      galaxy:"images/earth-galaxy.png",
+      gem:"images/earth-gem.png"
+    }
+  },
+
+  {
+    id:"fire",
+    name:"Fire Sprite",
+    image:"images/fire.png",
+    rarity:"Uncommon",
+    description:"A fiery little Sprite.",
+    variants:{
+      normal:"images/fire.png",
+      gold:"images/fire-gold.png",
+      gummy:"images/fire-gummy.png",
+      galaxy:"images/fire-galaxy.png",
+      gem:"images/fire-gem.png"
+    }
+  },
+
+  {
+    id:"duck",
+    name:"Duck Sprite",
+    image:"images/duck.png",
+    rarity:"Rare",
+    description:"A strange but cheerful duck Sprite.",
+    variants:{
+      normal:"images/duck.png",
+      gold:"images/duck-gold.png",
+      gummy:"images/duck-gummy.png",
+      galaxy:"images/duck-galaxy.png",
+      gem:"images/duck-gem.png"
+    }
+  },
+
+  {
+    id:"ghost",
+    name:"Ghost Sprite",
+    image:"images/ghost.png",
+    rarity:"Rare",
+    description:"A mysterious ghostly Sprite.",
+    variants:{
+      normal:"images/ghost.png",
+      gold:"images/ghost-gold.png",
+      gummy:"images/ghost-gummy.png",
+      galaxy:"images/ghost-galaxy.png",
+      gem:"images/ghost-gem.png"
+    }
+  },
+
+  {
+    id:"dream",
+    name:"Dream Sprite",
+    image:"images/dream.png",
+    rarity:"Epic",
+    description:"A mysterious Sprite from the dream realm.",
+    variants:{
+      normal:"images/dream.png",
+      gold:"images/dream-gold.png",
+      gummy:"images/dream-gummy.png",
+      galaxy:"images/dream-galaxy.png",
+      gem:"images/dream-gem.png"
+    }
+  },
+
+  {
+    id:"demon",
+    name:"Demon Sprite",
+    image:"images/demon.png",
+    rarity:"Rare",
+    description:"A powerful demonic Sprite.",
+    variants:{
+      normal:"images/demon.png",
+      gold:"images/demon-gold.png",
+      gummy:"images/demon-gummy.png",
+      galaxy:"images/demon-galaxy.png",
+      gem:"images/demon-gem.png"
+    }
+  },
+
+  {
+    id:"king",
+    name:"King Sprite",
+    image:"images/king.png",
+    rarity:"Rare",
+    description:"A royal Sprite.",
+    variants:{
+      normal:"images/king.png",
+      gold:"images/king-gold.png",
+      gummy:"images/king-gummy.png",
+      galaxy:"images/king-galaxy.png",
+      gem:"images/king-gem.png"
+    }
+  },
+
+  {
+    id:"punk",
+    name:"Punk Sprite",
+    image:"images/punk.png",
+    rarity:"Epic",
+    description:"A rebellious punk Sprite.",
+    variants:{
+      normal:"images/punk.png",
+      gold:"images/punk-gold.png",
+      gummy:"images/punk-gummy.png",
+      galaxy:"images/punk-galaxy.png",
+      gem:"images/punk-gem.png"
+    }
+  },
+
+  {
+    id:"zero",
+    name:"Zero Point Sprite",
+    image:"images/Zeropoint.png",
+    rarity:"Legendary",
+    description:"A mysterious Sprite connected to the Zero Point.",
+    variants:{
+      normal:"images/Zeropoint.png",
+      gold:"images/Zeropoint-gold.png",
+      gummy:"images/Zeropoint-gummy.png",
+      galaxy:"images/Zeropoint-galaxy.png",
+      gem:"images/Zeropoint-gem.png"
+    }
+  }
+];
 const variants = [
   {id:"normal",name:"Normal",chance:70,rarity:"Base",className:"variant-normal"},
   {id:"gold",name:"Gold",chance:12,rarity:"Rare",className:"variant-gold"},
@@ -261,33 +399,35 @@ function revealVariant(){
   const button=document.getElementById("continueButton");
   const box=document.getElementById("resultSprite");
   const img=box.querySelector("img");
-
   if(img){
-    let baseImage=currentSprite.image;
-    let variantImage;
+  img.src = currentSprite.variants[currentVariant.id];
+  img.alt = currentSprite.name + " - " + currentVariant.name;
 
-    if(currentVariant.id==="normal"){
-      variantImage=baseImage;
-    } else {
-      variantImage=baseImage.replace(/\.png$/i, "-" + currentVariant.id + ".png");
-    }
+  img.className="";
+  img.style.animation="none";
 
-    img.src=variantImage;
-    img.alt=currentSprite.name + " - " + currentVariant.name;
-
-    img.className="";
-    img.style.animation="none";
-
-    requestAnimationFrame(()=>{
-      img.style.animation="variantPulse .9s ease-out";
-    });
+  requestAnimationFrame(()=>{
+    img.style.animation="variantPulse .9s ease-out";
+  });
+}
+  variantEl.textContent=currentVariant.name==="Normal"?"Normal Variant":currentVariant.name+" Variant";
+  if(currentVariant.rarity==="Base"){
+    rarityEl.textContent=currentSprite.rarity;
+    rarityEl.className="resultRarity "+currentSprite.rarity;
+  }else{
+    rarityEl.textContent=currentVariant.rarity+" Variant";
+    rarityEl.className="resultRarity "+currentVariant.rarity;
   }
-
-  stage.textContent="VARIANT DISCOVERED";
-  variantEl.textContent=currentVariant.name;
-  rarityEl.textContent=currentVariant.rarity;
-  rarityEl.className="resultRarity "+currentVariant.rarity;
-  button.textContent="Continue";
+  const titles={gold:"🟡 GOLD VARIANT!",gummy:"🍬 GUMMY VARIANT!",galaxy:"🌌 GALAXY VARIANT!",cube:"🧊 CUBE VARIANT!",gem:"💎 MYTHIC GEM VARIANT!"};
+  stage.textContent=titles[currentVariant.id]||"SPRITE DISCOVERED";
+  button.textContent="Collect";
+  const collectionID=currentSprite.id+"_"+currentVariant.id;
+  if(!game.collection.includes(collectionID)){
+    game.collection.push(collectionID);
+    rewardForVariant(currentVariant);
+    saveGame();
+    updateUI();
+  }
 }
 
 function finishChest(){
