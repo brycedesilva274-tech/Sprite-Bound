@@ -458,6 +458,7 @@ function updateUI(){
   const total=totalCollectionSize(),collected=game.collection.length,pct=total?collected/total*100:0;
   document.getElementById("level").textContent=game.level;
   document.getElementById("coins").textContent=game.coins;
+  document.getElementById("keys").textContent=game.keys;
   document.getElementById("collectionCount").textContent=collected;
   document.getElementById("homeCollection").textContent=collected;
   document.getElementById("homeLevel").textContent=game.level;
