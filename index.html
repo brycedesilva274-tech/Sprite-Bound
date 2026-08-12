@@ -363,7 +363,7 @@ function switchScreen(screen,button){
 function chooseSprite(){
   const available=sprites.filter(s=>s.image);
   const roll=Math.random()*100;
-  let rarity=roll<55?"Uncommon":roll<83?"Rare":roll<95?"Epic":"Legendary";
+  let rarity=roll<55?"uncommon":roll<83?"rare":roll<95?"epic":"legendary";
   let possible=available.filter(s=>s.rarity===rarity);
   if(!possible.length)possible=available;
   return possible[Math.floor(Math.random()*possible.length)];
@@ -475,7 +475,7 @@ function rarityColour(r){
     rare:"#275BF5",
     epic:"#CC27F5",
     legendary:"#F5C827",
-    mythic:"#FFFB00"
+    mythic:"#FFDD43"
   }[r.toLowerCase()] || "#67e8f9";
 }
 
