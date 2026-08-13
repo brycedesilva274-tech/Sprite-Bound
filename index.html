@@ -585,18 +585,24 @@ function revealVariant(){
   const button=document.getElementById("continueButton");
   const box=document.getElementById("resultSprite");
   const img=box.querySelector("img");
+
   if(img){
-  img.src = currentSprite.variants[currentVariant.id];
-  img.alt = currentSprite.name + " - " + currentVariant.name;
+    img.src=currentSprite.variants[currentVariant.id];
+    img.alt=currentSprite.name+" - "+currentVariant.name;
 
-  img.className="";
-  img.style.animation="none";
+    img.className="";
+    img.style.animation="none";
 
-  requestAnimationFrame(()=>{
-    img.style.animation="variantPulse .9s ease-out";
-  });
-}
-  variantEl.textContent=currentVariant.name==="Normal"?"Normal Variant":currentVariant.name+" Variant";
+    requestAnimationFrame(()=>{
+      img.style.animation="variantPulse .9s ease-out";
+    });
+  }
+
+  variantEl.textContent=
+    currentVariant.name==="Normal"
+      ?"Normal Variant"
+      :currentVariant.name+" Variant";
+
   if(currentVariant.rarity==="Base"){
     rarityEl.textContent=currentSprite.rarity;
     rarityEl.className="resultRarity "+currentSprite.rarity;
@@ -604,18 +610,53 @@ function revealVariant(){
     rarityEl.textContent=currentVariant.rarity+" Variant";
     rarityEl.className="resultRarity "+currentVariant.rarity;
   }
-  const titles={gold:"🟡 GOLD VARIANT!",gummy:"🍬 GUMMY VARIANT!",galaxy:"🌌 GALAXY VARIANT!",cube:"🧊 CUBE VARIANT!",gem:"💎 MYTHIC GEM VARIANT!"};
-  stage.textContent=titles[currentVariant.id]||"SPRITE DISCOVERED";
-  button.textContent="Collect";
-  const collectionID=currentSprite.id+"_"+currentVariant.id;
-  if(!game.collection.includes(collectionID)){
-    game.collection.push(collectionID);
-    rewardForVariant(currentVariant);
-    saveGame();
-    updateUI();
-  }
-}
 
+  const titles={
+    gold:"🟡 GOLD VARIANT!",
+    gummy:"🍬 GUMMY VARIANT!",
+    galaxy:"🌌 GALAXY VARIANT!",
+    cube:"🧊 CUBE VARIANT!",
+    gem:"💎 MYTHIC GEM VARIANT!"
+  };
+
+  stage.textContent=titles[currentVariant.id]||"SPRITE DISCOVERED";
+
+  button.textContent="Collect";
+
+  const collectionID=
+    currentSprite.id+"_"+currentVariant.id;
+
+  // Check whether this is a duplicate
+  const duplicate=game.collection.includes(collectionID);
+
+  if(!duplicate){
+    // First time collecting this variant
+    game.collection.push(collectionID);
+
+    rewardForVariant(currentVariant);
+
+    stage.textContent=
+      titles[currentVariant.id]||"SPRITE DISCOVERED";
+  }else{
+    // Duplicate = bonus dust
+    const duplicateDust={
+      normal:10,
+      gold:20,
+      gummy:40,
+      galaxy:100,
+      gem:300
+    };
+
+    const dust=duplicateDust[currentVariant.id]||10;
+
+    game.dust+=dust;
+
+    stage.textContent="DUPLICATE! ✨ +"+dust+" DUST";
+  }
+
+  saveGame();
+  updateUI();
+}
 function finishChest(){
   document.getElementById("overlay").classList.remove("show");
   document.getElementById("chestContainer").classList.remove("opening");
