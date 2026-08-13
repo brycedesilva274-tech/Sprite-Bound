@@ -181,7 +181,7 @@ body{font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at
 
 
       <div class="homeCard" style="text-align:center">
-        <div style="font-size:55px">🔑🔑🔑</div>
+        <div style="font-size:55px">🔑🔑🔑🔑🔑</div>
 
         <h2 style="margin:15px 0 8px">
           5 Keys
@@ -201,7 +201,7 @@ body{font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at
 
 
       <div class="homeCard" style="text-align:center">
-        <div style="font-size:55px">🔑🔑🔑🔑🔑</div>
+        <div style="font-size:55px">🔑🔑🔑🔑🔑🔑🔑🔑🔑🔑</div>
 
         <h2 style="margin:15px 0 8px">
           10 Keys
@@ -688,35 +688,39 @@ function rewardForVariant(v){
   addXP(xp);
 }
 function buyKeys(amount){
-
-  const prices={
-    1:100,
-    5:450,
-    10:800
+  const prices = {
+    1: 100,
+    5: 450,
+    10: 800
   };
 
-  const price=prices[amount];
+  const price = prices[amount];
 
-  if(!price)return;
+  if (!price) {
+    console.error("Invalid key amount:", amount);
+    return;
+  }
 
-  if(game.dust<price){
+  if (game.dust < price) {
     alert(
       "Not enough Sprite Dust! ✨\n\n" +
-      "You need " + price + " Dust."
+      "You have: " + game.dust + " Dust\n" +
+      "You need: " + price + " Dust"
     );
     return;
-  
+  }
 
-  game.dust-=price;
-  game.keys+=amount;
+  game.dust -= price;
+  game.keys += amount;
 
   saveGame();
   updateUI();
 
   alert(
     "Purchase successful! 🔑\n\n" +
-    "+" + amount + " Key" + (amount>1?"s":"")
+    "+" + amount + " Key" + (amount === 1 ? "" : "s")
   );
+}
 }
 }
 
