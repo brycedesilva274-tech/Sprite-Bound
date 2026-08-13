@@ -427,7 +427,7 @@ let game={
   dust:100,
   collection:[]
 };
-};
+
 let currentSprite=null,currentVariant=null,chestBusy=false;
 
 function saveGame(){localStorage.setItem("spriteBoundSave",JSON.stringify(game))}
@@ -721,8 +721,7 @@ function buyKeys(amount){
     "+" + amount + " Key" + (amount === 1 ? "" : "s")
   );
 }
-}
-}
+
 
 function addXP(amount){
   game.xp+=amount;
