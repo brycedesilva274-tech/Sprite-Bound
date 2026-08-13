@@ -62,12 +62,13 @@ body{font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at
 <header class="topbar">
   <div class="logo">SPRITE<span>BOUND</span></div>
 
-  <div class="playerStats">
-    <div class="stat">⭐ Lv. <span id="level">1</span></div>
-    <div class="stat">🪙 <span id="coins">100</span></div>
-    <div class="stat">🗝️ <span id="keys">10</span></div>
-    <div class="stat">📖 <span id="collectionCount">0</span></div>
-  </div>
+<div class="playerStats">
+  <div class="stat">⭐ Lv. <span id="level">1</span></div>
+  <div class="stat">🪙 <span id="coins">100</span></div>
+  <div class="stat">🗝️ <span id="keys">10</span></div>
+  <div class="stat">✨ <span id="dust">0</span></div>
+  <div class="stat">📖 <span id="collectionCount">0</span></div>
+</div>
 </header>
 
 <main class="main">
@@ -149,13 +150,99 @@ body{font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at
     </div>
   </div>
 </section>
+<section class="screen" id="shopScreen">
+  <div class="homeContainer">
+
+    <h1 class="screenTitle">✨ Sprite Dust Shop</h1>
+    <p class="screenSubtitle">
+      Turn your Sprite Dust into keys.
+    </p>
+
+    <div class="homeGrid" style="margin-top:30px">
+
+      <div class="homeCard" style="text-align:center">
+        <div style="font-size:55px">🔑</div>
+
+        <h2 style="margin:15px 0 8px">
+          1 Key
+        </h2>
+
+        <p class="muted">
+          100 ✨ Sprite Dust
+        </p>
+
+        <button
+          class="continueButton"
+          onclick="buyKeys(1)"
+          style="margin-top:20px">
+          Buy 1 Key
+        </button>
+      </div>
+
+
+      <div class="homeCard" style="text-align:center">
+        <div style="font-size:55px">🔑🔑🔑</div>
+
+        <h2 style="margin:15px 0 8px">
+          5 Keys
+        </h2>
+
+        <p class="muted">
+          450 ✨ Sprite Dust
+        </p>
+
+        <button
+          class="continueButton"
+          onclick="buyKeys(5)"
+          style="margin-top:20px">
+          Buy 5 Keys
+        </button>
+      </div>
+
+
+      <div class="homeCard" style="text-align:center">
+        <div style="font-size:55px">🔑🔑🔑🔑🔑</div>
+
+        <h2 style="margin:15px 0 8px">
+          10 Keys
+        </h2>
+
+        <p class="muted">
+          800 ✨ Sprite Dust
+        </p>
+
+        <button
+          class="continueButton"
+          onclick="buyKeys(10)"
+          style="margin-top:20px">
+          Buy 10 Keys
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+</section>
 </main>
 
 <nav class="bottomNav">
-  <button class="navButton active" onclick="switchScreen('home',this)"><span class="navIcon">🏠</span>Home</button>
-  <button class="navButton" onclick="switchScreen('chest',this)"><span class="navIcon">🎁</span>Chest</button>
-  <button class="navButton" onclick="switchScreen('dex',this)"><span class="navIcon">📖</span>SpriteDex</button>
-  <button class="navButton" onclick="switchScreen('clan',this)"><span class="navIcon">👥</span>Clan</button>
+
+  <button class="navButton active" onclick="switchScreen('home',this)">
+    <span class="navIcon">🏠</span>Home
+  </button>
+
+  <button class="navButton" onclick="switchScreen('chest',this)">
+    <span class="navIcon">🎁</span>Chest
+  </button>
+
+  <button class="navButton" onclick="switchScreen('dex',this)">
+    <span class="navIcon">📖</span>SpriteDex
+  </button>
+
+  <button class="navButton" onclick="switchScreen('shop',this)">
+    <span class="navIcon">✨</span>Shop
+  </button>
+
 </nav>
 </div>
 
@@ -537,9 +624,59 @@ function finishChest(){
 }
 
 function rewardForVariant(v){
-  const rewards={normal:[5,10],gold:[20,30],gummy:[50,70],galaxy:[150,150],cube:[500,400],gem:[2000,1000]};
-  const [coins,xp]=rewards[v.id];
-  game.coins+=coins;addXP(xp);
+
+  const rewards={
+    normal:[5,10,5],
+    gold:[20,30,10],
+    gummy:[50,70,20],
+    galaxy:[150,150,50],
+    gem:[2000,1000,150]
+  };
+
+  const reward=rewards[v.id];
+
+  if(!reward)return;
+
+  const coins=reward[0];
+  const xp=reward[1];
+  const dust=reward[2];
+
+  game.coins+=coins;
+  game.dust+=dust;
+
+  addXP(xp);
+}
+function buyKeys(amount){
+
+  const prices={
+    1:100,
+    5:450,
+    10:800
+  };
+
+  const price=prices[amount];
+
+  if(!price)return;
+
+  if(game.dust<price){
+    alert(
+      "Not enough Sprite Dust! ✨\n\n" +
+      "You need " + price + " Dust."
+    );
+    return;
+  }
+
+  game.dust-=price;
+  game.keys+=amount;
+
+  saveGame();
+  updateUI();
+
+  alert(
+    "Purchase successful! 🔑\n\n" +
+    "+" + amount + " Key" + (amount>1?"s":"")
+  );
+}
 }
 
 function addXP(amount){
@@ -565,6 +702,7 @@ function updateUI(){
   document.getElementById("level").textContent=game.level;
   document.getElementById("coins").textContent=game.coins;
   document.getElementById("keys").textContent=game.keys;
+  document.getElementById("dust").textContent=game.dust;
   document.getElementById("collectionCount").textContent=collected;
   document.getElementById("homeCollection").textContent=collected;
   document.getElementById("homeLevel").textContent=game.level;
