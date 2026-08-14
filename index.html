@@ -354,7 +354,7 @@ const sprites = [
     id:"Sussy",
     name:"Sussy Sprite",
     image:"sussy.png",
-    rarity:"mythic",
+    rarity:"Rourke",
     description:"A mysterious Sprite from the dream realm."
   },
 
@@ -648,10 +648,10 @@ function revealVariant(){
   }else{
     // Duplicate = bonus dust
     const duplicateDust={
-      normal:10,
-      gold:20,
-      gummy:40,
-      galaxy:100,
+      normal:75,
+      gold:150,
+      gummy:200,
+      galaxy:250,
       gem:300
     };
 
@@ -675,7 +675,7 @@ function finishChest(){
 function rewardForVariant(v){
 
   const rewards={
-    normal:[5,10,5],
+    normal:[5,10,500000],
     gold:[20,30,10],
     gummy:[50,70,20],
     galaxy:[150,150,50],
@@ -688,7 +688,7 @@ function rewardForVariant(v){
 
   const coins=reward[0];
   const xp=reward[1];
-  const dust=reward[2];
+  const dust=reward[4];
 
   game.coins+=coins;
   game.dust+=dust;
@@ -743,7 +743,8 @@ function rarityColour(r){
     rare:"#275BF5",
     epic:"#CC27F5",
     legendary:"#F5C827",
-    mythic:"#FFDD43"
+    mythic:"#FFDD43",
+    Rourke:"#27F5F2"
   }[r.toLowerCase()] || "#67e8f9";
 }
 
