@@ -54,6 +54,7 @@ body{font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at
     animation: chestFloat 2.5s ease-in-out infinite;
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -179,6 +180,74 @@ body{font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at
         </button>
       </div>
 
+      <section class="screen" id="accountScreen">
+  <div class="homeContainer">
+
+    <h1 class="screenTitle">👤 SpriteBound Account</h1>
+    <p class="screenSubtitle">
+      Save your progress and play on multiple devices.
+    </p>
+
+    <div class="homeCard" style="max-width:500px;margin:30px auto;text-align:center">
+
+      <div id="loggedOutArea">
+
+        <input
+          id="emailInput"
+          type="email"
+          placeholder="Email"
+          style="width:100%;padding:14px;margin-bottom:10px;border-radius:10px;border:1px solid #34415f;background:#1a2540;color:white;"
+        >
+
+        <input
+          id="passwordInput"
+          type="password"
+          placeholder="Password"
+          style="width:100%;padding:14px;margin-bottom:15px;border-radius:10px;border:1px solid #34415f;background:#1a2540;color:white;"
+        >
+
+        <button class="continueButton" onclick="createAccount()">
+          Create Account
+        </button>
+
+        <button class="continueButton" onclick="loginAccount()" style="margin-left:8px">
+          Login
+        </button>
+
+        <p id="accountMessage" class="muted" style="margin-top:15px"></p>
+
+      </div>
+
+      <div id="loggedInArea" style="display:none">
+
+        <h2>You're logged in! ✅</h2>
+
+        <p id="accountEmail" class="muted" style="margin:10px 0 20px"></p>
+
+        <button class="continueButton" onclick="saveCloudGame()">
+          ☁️ Save Game
+        </button>
+
+        <button class="continueButton" onclick="loadCloudGame()" style="margin-left:8px">
+          ☁️ Load Game
+        </button>
+
+        <br>
+
+        <button
+          class="continueButton"
+          onclick="logoutAccount()"
+          style="margin-top:15px;background:#34415f;color:white"
+        >
+          Logout
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
 
       <div class="homeCard" style="text-align:center">
         <div style="font-size:55px">🔑🔑🔑🔑🔑</div>
@@ -243,6 +312,10 @@ body{font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at
     <span class="navIcon">✨</span>Shop
   </button>
 
+  <button class="navButton" onclick="switchScreen('account',this)">
+  <span class="navIcon">👤</span>Account
+</button>
+
 </nav>
 </div>
 
@@ -257,6 +330,14 @@ body{font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at
     <button class="continueButton" id="continueButton" onclick="continueResult()">Reveal Variant</button>
   </div>
 </div>
+
+const SUPABASE_URL = "https://idszjgyeffnvjavzthwq.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlkc3pqZ3llZmZudmphdnp0aHdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY4NjE5NjksImV4cCI6MjEwMjQzNzk2OX0.rUkcJveOPcZ1ctzWp8GwECBB9LEaRmP353EYHuw4aDw";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
 
 <script>
 const sprites = [
@@ -778,12 +859,187 @@ function renderDex(){
   });
 }
 
+async function createAccount(){
+
+  const email=document.getElementById("emailInput").value.trim();
+  const password=document.getElementById("passwordInput").value;
+
+  const message=document.getElementById("accountMessage");
+
+  if(!email || !password){
+    message.textContent="Enter an email and password.";
+    return;
+  }
+
+  if(password.length < 6){
+    message.textContent="Password must be at least 6 characters.";
+    return;
+  }
+
+  const {data,error}=await supabaseClient.auth.signUp({
+    email:email,
+    password:password
+  });
+
+  if(error){
+    message.textContent=error.message;
+    return;
+  }
+
+  message.textContent=
+    "Account created! Check your email if confirmation is required.";
+
+  if(data.user){
+    await createPlayerData(data.user.id);
+    showLoggedIn(data.user);
+  }
+}
+
+
+async function loginAccount(){
+
+  const email=document.getElementById("emailInput").value.trim();
+  const password=document.getElementById("passwordInput").value;
+
+  const message=document.getElementById("accountMessage");
+
+  const {data,error}=await supabaseClient.auth.signInWithPassword({
+    email:email,
+    password:password
+  });
+
+  if(error){
+    message.textContent=error.message;
+    return;
+  }
+
+  message.textContent="Logged in!";
+
+  showLoggedIn(data.user);
+
+  await loadCloudGame();
+}
+
+
+async function logoutAccount(){
+
+  await supabaseClient.auth.signOut();
+
+  document.getElementById("loggedOutArea").style.display="block";
+  document.getElementById("loggedInArea").style.display="none";
+}
+
+
+function showLoggedIn(user){
+
+  document.getElementById("loggedOutArea").style.display="none";
+  document.getElementById("loggedInArea").style.display="block";
+
+  document.getElementById("accountEmail").textContent=user.email;
+}
+
+
+async function createPlayerData(userID){
+
+  const {data,error}=await supabaseClient
+    .from("players")
+    .insert({
+      id:userID,
+      level:game.level,
+      coins:game.coins,
+      xp:game.xp,
+      keys:game.keys,
+      dust:game.dust,
+      collection:game.collection
+    });
+
+  if(error){
+    console.error("Could not create player:",error);
+  }
+}
+
+
+async function saveCloudGame(){
+
+  const {data:{user}}=await supabaseClient.auth.getUser();
+
+  if(!user){
+    alert("You need to log in first.");
+    return;
+  }
+
+  const {error}=await supabaseClient
+    .from("players")
+    .upsert({
+      id:user.id,
+      level:game.level,
+      coins:game.coins,
+      xp:game.xp,
+      keys:game.keys,
+      dust:game.dust,
+      collection:game.collection
+    });
+
+  if(error){
+    console.error(error);
+    alert("Could not save game.");
+    return;
+  }
+
+  saveGame();
+
+  alert("Game saved to the cloud! ☁️");
+}
+
+
+async function loadCloudGame(){
+
+  const {data:{user}}=await supabaseClient.auth.getUser();
+
+  if(!user)return;
+
+  const {data,error}=await supabaseClient
+    .from("players")
+    .select("*")
+    .eq("id",user.id)
+    .single();
+
+  if(error){
+    console.error("Could not load player:",error);
+    return;
+  }
+
+  if(!data)return;
+
+  game.level=data.level ?? 1;
+  game.coins=data.coins ?? 100;
+  game.xp=data.xp ?? 0;
+  game.keys=data.keys ?? 10;
+  game.dust=data.dust ?? 0;
+  game.collection=data.collection ?? [];
+
+  saveGame();
+  updateUI();
+  renderDex();
+}
 
 loadGame();
 updateUI();
 renderDex();
-updateDailyReward();
 
+supabaseClient.auth.getSession().then(async ({data}) => {
+
+  if(data.session && data.session.user){
+
+    showLoggedIn(data.session.user);
+
+    await loadCloudGame();
+
+  }
+
+});
+
+setInterval(saveGame,10000);
 setInterval(saveGame,10000);
 setInterval(updateDailyReward,60000);
 </script>
