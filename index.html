@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SpriteBound</title>
+
 <style>
 *{
     box-sizing:border-box;
@@ -21,15 +22,28 @@
     --cyan:#67e8f9;
 }
 
+html,
+body{
+    width:100%;
+    height:100%;
+}
+
 body{
     font-family:Arial,Helvetica,sans-serif;
-    background:radial-gradient(circle at 50% 20%,#1d3157,#080d19 60%);
+    background:
+        radial-gradient(circle at 50% 20%,#1d3157,#080d19 60%);
     color:var(--text);
     min-height:100vh;
     overflow:hidden;
 }
 
+button,
+input{
+    font-family:inherit;
+}
+
 .app{
+    width:100%;
     height:100vh;
     display:flex;
     flex-direction:column;
@@ -76,11 +90,12 @@ body{
 }
 
 /* =========================
-   MAIN / SCREENS
+   MAIN
 ========================= */
 
 .main{
     flex:1;
+    min-height:0;
     position:relative;
     overflow:hidden;
 }
@@ -102,8 +117,10 @@ body{
 .dexHeader,
 .dexGrid,
 .clanContainer{
+    width:100%;
     max-width:1200px;
-    margin:auto;
+    margin-left:auto;
+    margin-right:auto;
 }
 
 /* =========================
@@ -150,6 +167,7 @@ body{
 .heroOrb{
     width:210px;
     height:210px;
+    flex-shrink:0;
     border-radius:50%;
     background:
         radial-gradient(
@@ -269,11 +287,14 @@ body{
     transition:.4s;
 }
 
-.chestBody{
-    width:210px;
-    height:150px;
-    position:relative;
+.chestImage{
+    width:220px;
+    height:auto;
+    display:block;
+    object-fit:contain;
     animation:chestFloat 2.5s ease-in-out infinite;
+    position:relative;
+    z-index:2;
 }
 
 @keyframes chestFloat{
@@ -286,61 +307,7 @@ body{
     }
 }
 
-.chestBottom{
-    position:absolute;
-    bottom:0;
-    width:210px;
-    height:105px;
-    border-radius:15px 15px 22px 22px;
-    background:linear-gradient(135deg,#8e552f,#c17b3e,#704023);
-    border:6px solid #422715;
-    box-shadow:
-        inset 0 5px 0 rgba(255,255,255,.12),
-        0 20px 35px rgba(0,0,0,.45);
-}
-
-.chestLid{
-    position:absolute;
-    left:-2px;
-    top:10px;
-    width:214px;
-    height:72px;
-    border-radius:45px 45px 10px 10px;
-    background:linear-gradient(135deg,#a76537,#d38a49,#754325);
-    border:6px solid #422715;
-    transform-origin:bottom center;
-    transition:transform .8s cubic-bezier(.2,.8,.2,1);
-    z-index:3;
-}
-
-.chestLock{
-    position:absolute;
-    z-index:5;
-    width:42px;
-    height:48px;
-    left:84px;
-    top:76px;
-    background:#f5c84c;
-    border:5px solid #765315;
-    border-radius:8px;
-}
-
-.chestLock:before{
-    content:"";
-    position:absolute;
-    width:18px;
-    height:18px;
-    border:5px solid #765315;
-    border-radius:50%;
-    left:7px;
-    top:-16px;
-}
-
-.chestContainer.opening .chestLid{
-    transform:rotateX(125deg);
-}
-
-.chestContainer.shaking .chestBody{
+.chestContainer.shaking .chestImage{
     animation:shake .12s infinite;
 }
 
@@ -365,23 +332,15 @@ body{
     right:0;
     font-weight:bold;
     letter-spacing:1px;
+    z-index:4;
 }
 
 .chestHint{
     color:#8591ad;
 }
 
-.chestImage{
-    width:220px;
-    height:auto;
-    display:block;
-    margin:0 auto;
-    object-fit:contain;
-    animation:chestFloat 2.5s ease-in-out infinite;
-}
-
 /* =========================
-   REVEAL OVERLAY
+   REVEAL
 ========================= */
 
 .overlay{
@@ -393,6 +352,7 @@ body{
     align-items:center;
     justify-content:center;
     z-index:200;
+    padding:20px;
 }
 
 .overlay.show{
@@ -610,9 +570,7 @@ body{
     width:125px;
     height:125px;
     object-fit:contain;
-    filter:drop-shadow(
-        0 10px 12px rgba(0,0,0,.35)
-    );
+    filter:drop-shadow(0 10px 12px rgba(0,0,0,.35));
 }
 
 .dexName{
@@ -642,6 +600,40 @@ body{
 
 .variantTag.locked{
     opacity:.35;
+}
+
+/* =========================
+   SHOP
+========================= */
+
+.shopContainer{
+    max-width:1000px;
+    margin:auto;
+}
+
+.shopGrid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+    margin-top:25px;
+}
+
+.shopCard{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:25px;
+    text-align:center;
+}
+
+.shopIcon{
+    font-size:55px;
+    margin-bottom:10px;
+}
+
+.shopPrice{
+    color:#c8d2e9;
+    margin-top:8px;
 }
 
 /* =========================
@@ -707,7 +699,7 @@ body{
 }
 
 /* =========================
-   BOTTOM NAVIGATION
+   BOTTOM NAV
 ========================= */
 
 .bottomNav{
@@ -744,7 +736,7 @@ body{
 }
 
 /* =========================
-   SPRITE VARIANTS
+   VARIANTS
 ========================= */
 
 .variant-normal{
@@ -788,6 +780,14 @@ body{
         brightness(1.18)
         hue-rotate(25deg)
         drop-shadow(0 0 24px #fff08a);
+}
+
+.variant-rourke{
+    filter:
+        saturate(1.8)
+        brightness(1.2)
+        hue-rotate(150deg)
+        drop-shadow(0 0 28px #27f5f2);
 }
 
 /* =========================
@@ -841,15 +841,20 @@ body{
 
     .hero{
         padding:25px;
+        flex-direction:column;
+        text-align:center;
+        gap:20px;
     }
 
     .heroOrb{
         width:120px;
         height:120px;
+        flex-shrink:0;
     }
 
     .homeGrid,
-    .futureFeatures{
+    .futureFeatures,
+    .shopGrid{
         grid-template-columns:1fr;
     }
 
@@ -877,16 +882,6 @@ body{
         display:none;
     }
 
-    .hero{
-        flex-direction:column;
-        text-align:center;
-        gap:20px;
-    }
-
-    .heroOrb{
-        flex-shrink:0;
-    }
-
     .clanHero{
         padding:30px 20px;
     }
@@ -908,996 +903,2494 @@ body{
     }
 }
 </style>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
+
 <body>
 
 <div class="app">
 
-<header class="topbar">
-  <div class="logo">SPRITE<span>BOUND</span></div>
+<!-- =========================
+     TOP BAR
+========================= -->
 
-<div class="playerStats">
-  <div class="stat">⭐ Lv. <span id="level">1</span></div>
-  <div class="stat">🪙 <span id="coins">100</span></div>
-  <div class="stat">🗝️ <span id="keys">10</span></div>
-  <div class="stat">✨ <span id="dust">0</span></div>
-  <div class="stat">📖 <span id="collectionCount">0</span></div>
-</div>
+<header class="topbar">
+
+    <div class="logo">
+        SPRITE<span>BOUND</span>
+    </div>
+
+    <div class="playerStats">
+
+        <div class="stat">
+            ⭐ Lv. <span id="level">1</span>
+        </div>
+
+        <div class="stat">
+            🪙 <span id="coins">100</span>
+        </div>
+
+        <div class="stat">
+            🗝️ <span id="keys">10</span>
+        </div>
+
+        <div class="stat">
+            ✨ <span id="dust">0</span>
+        </div>
+
+        <div class="stat">
+            📖 <span id="collectionCount">0</span>
+        </div>
+
+    </div>
+
 </header>
 
+
+<!-- =========================
+     MAIN
+========================= -->
+
 <main class="main">
+
+
+<!-- =========================
+     HOME
+========================= -->
+
 <section class="screen active" id="homeScreen">
-  <div class="homeContainer">
-    <div class="hero">
-      <div class="heroText">
-        <h1>Welcome to <span>SpriteBound</span></h1>
-        <p>Open Sprite Chests, discover rare variants and complete your SpriteDex.</p>
-      </div>
-      <div class="heroOrb"></div>
+
+    <div class="homeContainer">
+
+        <div class="hero">
+
+            <div class="heroText">
+
+                <h1>
+                    Welcome to <span>SpriteBound</span>
+                </h1>
+
+                <p>
+                    Open Sprite Chests, discover rare variants
+                    and complete your SpriteDex.
+                </p>
+
+            </div>
+
+            <div class="heroOrb"></div>
+
+        </div>
+
+
+        <div class="homeGrid">
+
+            <div class="homeCard">
+
+                <h3>📖 SpriteDex</h3>
+
+                <div class="bigNumber">
+                    <span id="homeCollection">0</span>
+                </div>
+
+                <div class="muted">
+                    Variants collected
+                </div>
+
+                <div class="progress">
+                    <div
+                        class="progressFill"
+                        id="homeProgress">
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="homeCard">
+
+                <h3>⭐ Level</h3>
+
+                <div class="bigNumber">
+                    <span id="homeLevel">1</span>
+                </div>
+
+                <div class="muted">
+                    Collect Sprites to earn XP.
+                </div>
+
+            </div>
+
+
+            <div class="homeCard">
+
+                <h3>🎁 Chest</h3>
+
+                <div class="bigNumber">
+                    OPEN
+                </div>
+
+                <div class="muted">
+                    Discover your next Sprite.
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- DAILY REWARD -->
+
+        <div style="max-width:1200px;margin:22px auto 0">
+
+            <div class="homeCard">
+
+                <h3>🎁 Daily Reward</h3>
+
+                <p
+                    class="muted"
+                    id="dailyRewardText">
+                    Claim your daily reward!
+                </p>
+
+                <button
+                    class="continueButton"
+                    id="dailyRewardButton"
+                    onclick="claimDailyReward()"
+                    style="margin-top:15px">
+                    Claim +3 Keys
+                </button>
+
+            </div>
+
+        </div>
+
     </div>
-    <div class="homeGrid">
-      <div class="homeCard">
-        <h3>📖 SpriteDex</h3>
-        <div class="bigNumber"><span id="homeCollection">0</span></div>
-        <div class="muted">Variants collected</div>
-        <div class="progress"><div class="progressFill" id="homeProgress"></div></div>
-      </div>
-      <div class="homeCard">
-        <h3>⭐ Level</h3>
-        <div class="bigNumber"><span id="homeLevel">1</span></div>
-        <div class="muted">Collect Sprites to earn XP.</div>
-      </div>
-      <div class="homeCard">
-        <h3>🎁 Chest</h3>
-        <div class="bigNumber">OPEN</div>
-        <div class="muted">Discover your next Sprite.</div>
-      </div>
-    </div><div style="max-width:1200px;margin:22px auto 0">
-  <div class="homeCard">
-    <h3>🎁 Daily Reward</h3>
-    <p class="muted" id="dailyRewardText">Claim your daily reward!</p>
-    <button class="continueButton" id="dailyRewardButton" onclick="claimDailyReward()" style="margin-top:15px">
-      Claim +3 Keys
-    </button>
-  </div>
-</div>
-  </div>
+
 </section>
 
-<section class="screen chestScreen" id="chestScreen">
-  <h1 class="screenTitle">Sprite Chest</h1>
-  <p class="screenSubtitle">What will you discover?</p>
-  <div class="chestArea">
-    <div class="chestContainer" id="chestContainer" onclick="openChest()">
-      <div class="chestGlow" id="chestGlow"></div>
-      <img src="spritechest.png" class="chestImage" id="chestImage" alt="Sprite Chest">
-      <div class="openText">TAP TO OPEN</div>
-    </div>
-  </div>
-  <div class="chestHint">The Sprite rarity is determined first. The variant is rolled separately.</div>
-</section>
 
-<section class="screen" id="dexScreen">
-  <div class="dexHeader">
-    <h1 class="screenTitle">📖 SpriteDex</h1>
-    <p class="screenSubtitle">Collect every Sprite and every variant.</p>
-    <div class="dexStats">
-      <strong>Variants: <span id="dexProgress">0</span></strong>
-      <div class="progress"><div class="progressFill" id="dexProgressBar"></div></div>
-    </div>
-  </div>
-  <div class="dexGrid" id="dexGrid"></div>
-</section>
+<!-- =========================
+     CHEST
+========================= -->
 
-<section class="screen" id="clanScreen">
-  <div class="clanContainer">
-    <div class="clanHero">
-      <div class="clanIcon">👥</div>
-      <h1>Clans</h1>
-      <p>Create or join a clan, chat with other collectors and eventually trade duplicate Sprites.</p>
-      <div class="comingSoon">COMING SOON</div>
-    </div>
-    <div class="futureFeatures">
-      <div class="futureCard"><div>💬</div><strong>Clan Chat</strong><p class="muted">Talk with your clan.</p></div>
-      <div class="futureCard"><div>🔄</div><strong>Trading</strong><p class="muted">Trade duplicate variants.</p></div>
-      <div class="futureCard"><div>🏆</div><strong>Clan Rankings</strong><p class="muted">Compete with other clans.</p></div>
-    </div>
-  </div>
- </section>
+<section
+    class="screen chestScreen"
+    id="chestScreen">
 
-</section>
-      <div class="homeCard" style="text-align:center">
-        <div style="font-size:55px">🔑🔑🔑🔑🔑</div>
-
-        <h2 style="margin:15px 0 8px">
-          5 Keys
-        </h2>
-
-        <p class="muted">
-          450 ✨ Sprite Dust
-        </p>
-
-        <button
-          class="continueButton"
-          onclick="buyKeys(5)"
-          style="margin-top:20px">
-          Buy 5 Keys
-        </button>
-      </div>
-
-
-      <div class="homeCard" style="text-align:center">
-        <div style="font-size:55px">🔑🔑🔑🔑🔑🔑🔑🔑🔑🔑</div>
-
-        <h2 style="margin:15px 0 8px">
-          10 Keys
-        </h2>
-
-        <p class="muted">
-          800 ✨ Sprite Dust
-        </p>
-
-        <button
-          class="continueButton"
-          onclick="buyKeys(10)"
-          style="margin-top:20px">
-          Buy 10 Keys
-        </button>
-      </div>
-
-    </div>
-
-  </div>
-</section>
-<section class="screen" id="accountScreen">
-  <div class="homeContainer">
-
-    <h1 class="screenTitle">👤 SpriteBound Account</h1>
+    <h1 class="screenTitle">
+        Sprite Chest
+    </h1>
 
     <p class="screenSubtitle">
-      Save your progress and play on multiple devices.
+        What will you discover?
     </p>
 
-    <div class="homeCard" style="max-width:500px;margin:30px auto;text-align:center">
+    <div class="chestArea">
 
-      <!-- LOGGED OUT -->
-      <div id="loggedOutArea">
+        <div
+            class="chestContainer"
+            id="chestContainer"
+            onclick="openChest()">
 
-        <input
-          id="emailInput"
-          type="email"
-          placeholder="Email"
-          style="width:100%;padding:14px;margin-bottom:10px;border-radius:10px;border:1px solid #34415f;background:#1a2540;color:white;"
-        >
+            <div
+                class="chestGlow"
+                id="chestGlow">
+            </div>
 
-        <input
-          id="passwordInput"
-          type="password"
-          placeholder="Password"
-          style="width:100%;padding:14px;margin-bottom:15px;border-radius:10px;border:1px solid #34415f;background:#1a2540;color:white;"
-        >
+            <img
+                src="spritechest.png"
+                class="chestImage"
+                id="chestImage"
+                alt="Sprite Chest">
 
-        <button
-          class="continueButton"
-          onclick="createAccount()">
-          Create Account
-        </button>
+            <div class="openText">
+                TAP TO OPEN
+            </div>
 
-        <button
-          class="continueButton"
-          onclick="loginAccount()"
-          style="margin-left:8px">
-          Login
-        </button>
-
-        <p
-          id="accountMessage"
-          class="muted"
-          style="margin-top:15px">
-        </p>
-
-      </div>
-
-
-      <!-- LOGGED IN -->
-      <div id="loggedInArea" style="display:none">
-
-        <h2>You're logged in! ✅</h2>
-
-        <p
-          id="accountEmail"
-          class="muted"
-          style="margin:10px 0 20px">
-        </p>
-
-        <button
-          class="continueButton"
-          onclick="saveCloudGame()">
-          ☁️ Save Game
-        </button>
-
-        <button
-          class="continueButton"
-          onclick="loadCloudGame()"
-          style="margin-left:8px">
-          ☁️ Load Game
-        </button>
-
-        <br>
-
-        <button
-          class="continueButton"
-          onclick="logoutAccount()"
-          style="margin-top:15px;background:#34415f;color:white">
-          Logout
-        </button>
-
-      </div>
+        </div>
 
     </div>
 
-  </div>
+    <div class="chestHint">
+        The Sprite rarity is determined first.
+        The variant is rolled separately.
+    </div>
+
 </section>
+
+
+<!-- =========================
+     SPRITEDEX
+========================= -->
+
+<section
+    class="screen"
+    id="dexScreen">
+
+    <div class="dexHeader">
+
+        <h1 class="screenTitle">
+            📖 SpriteDex
+        </h1>
+
+        <p class="screenSubtitle">
+            Collect every Sprite and every variant.
+        </p>
+
+        <div class="dexStats">
+
+            <strong>
+                Variants:
+                <span id="dexProgress">
+                    0
+                </span>
+            </strong>
+
+            <div class="progress">
+
+                <div
+                    class="progressFill"
+                    id="dexProgressBar">
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div
+        class="dexGrid"
+        id="dexGrid">
+    </div>
+
+</section>
+
+
+<!-- =========================
+     CLANS
+========================= -->
+
+<section
+    class="screen"
+    id="clanScreen">
+
+    <div class="clanContainer">
+
+        <div class="clanHero">
+
+            <div class="clanIcon">
+                👥
+            </div>
+
+            <h1>
+                Clans
+            </h1>
+
+            <p>
+                Create or join a clan, chat with other
+                collectors and eventually trade duplicate Sprites.
+            </p>
+
+            <div class="comingSoon">
+                COMING SOON
+            </div>
+
+        </div>
+
+
+        <div class="futureFeatures">
+
+            <div class="futureCard">
+
+                <div>💬</div>
+
+                <strong>
+                    Clan Chat
+                </strong>
+
+                <p class="muted">
+                    Talk with your clan.
+                </p>
+
+            </div>
+
+
+            <div class="futureCard">
+
+                <div>🔄</div>
+
+                <strong>
+                    Trading
+                </strong>
+
+                <p class="muted">
+                    Trade duplicate variants.
+                </p>
+
+            </div>
+
+
+            <div class="futureCard">
+
+                <div>🏆</div>
+
+                <strong>
+                    Clan Rankings
+                </strong>
+
+                <p class="muted">
+                    Compete with other clans.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     SHOP
+========================= -->
+
+<section
+    class="screen"
+    id="shopScreen">
+
+    <div class="shopContainer">
+
+        <h1 class="screenTitle">
+            ✨ Sprite Shop
+        </h1>
+
+        <p class="screenSubtitle">
+            Spend Sprite Dust to purchase Keys.
+        </p>
+
+
+        <div class="shopGrid">
+
+
+            <div class="shopCard">
+
+                <div class="shopIcon">
+                    🔑
+                </div>
+
+                <h2>
+                    1 Key
+                </h2>
+
+                <p class="shopPrice">
+                    100 ✨ Sprite Dust
+                </p>
+
+                <button
+                    class="continueButton"
+                    onclick="buyKeys(1)"
+                    style="margin-top:20px">
+                    Buy 1 Key
+                </button>
+
+            </div>
+
+
+            <div class="shopCard">
+
+                <div class="shopIcon">
+                    🔑🔑🔑🔑🔑
+                </div>
+
+                <h2>
+                    5 Keys
+                </h2>
+
+                <p class="shopPrice">
+                    450 ✨ Sprite Dust
+                </p>
+
+                <button
+                    class="continueButton"
+                    onclick="buyKeys(5)"
+                    style="margin-top:20px">
+                    Buy 5 Keys
+                </button>
+
+            </div>
+
+
+            <div class="shopCard">
+
+                <div class="shopIcon">
+                    🔑🔑🔑🔑🔑🔑🔑🔑🔑🔑
+                </div>
+
+                <h2>
+                    10 Keys
+                </h2>
+
+                <p class="shopPrice">
+                    800 ✨ Sprite Dust
+                </p>
+
+                <button
+                    class="continueButton"
+                    onclick="buyKeys(10)"
+                    style="margin-top:20px">
+                    Buy 10 Keys
+                </button>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     ACCOUNT
+========================= -->
+
+<section
+    class="screen"
+    id="accountScreen">
+
+    <div class="homeContainer">
+
+        <h1 class="screenTitle">
+            👤 SpriteBound Account
+        </h1>
+
+        <p class="screenSubtitle">
+            Save your progress and play on multiple devices.
+        </p>
+
+
+        <div
+            class="homeCard"
+            style="max-width:500px;margin:30px auto;text-align:center">
+
+
+            <!-- LOGGED OUT -->
+
+            <div id="loggedOutArea">
+
+                <input
+                    id="emailInput"
+                    type="email"
+                    placeholder="Email"
+                    style="
+                        width:100%;
+                        padding:14px;
+                        margin-bottom:10px;
+                        border-radius:10px;
+                        border:1px solid #34415f;
+                        background:#1a2540;
+                        color:white;
+                    "
+                >
+
+
+                <input
+                    id="passwordInput"
+                    type="password"
+                    placeholder="Password"
+                    style="
+                        width:100%;
+                        padding:14px;
+                        margin-bottom:15px;
+                        border-radius:10px;
+                        border:1px solid #34415f;
+                        background:#1a2540;
+                        color:white;
+                    "
+                >
+
+
+                <button
+                    class="continueButton"
+                    onclick="createAccount()">
+                    Create Account
+                </button>
+
+
+                <button
+                    class="continueButton"
+                    onclick="loginAccount()"
+                    style="margin-left:8px">
+                    Login
+                </button>
+
+
+                <p
+                    id="accountMessage"
+                    class="muted"
+                    style="margin-top:15px">
+                </p>
+
+            </div>
+
+
+            <!-- LOGGED IN -->
+
+            <div
+                id="loggedInArea"
+                style="display:none">
+
+                <h2>
+                    You're logged in! ✅
+                </h2>
+
+
+                <p
+                    id="accountEmail"
+                    class="muted"
+                    style="margin:10px 0 20px">
+                </p>
+
+
+                <button
+                    class="continueButton"
+                    onclick="saveCloudGame()">
+                    ☁️ Save Game
+                </button>
+
+
+                <button
+                    class="continueButton"
+                    onclick="loadCloudGame()"
+                    style="margin-left:8px">
+                    ☁️ Load Game
+                </button>
+
+
+                <br>
+
+
+                <button
+                    class="continueButton"
+                    onclick="logoutAccount()"
+                    style="
+                        margin-top:15px;
+                        background:#34415f;
+                        color:white">
+                    Logout
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
 </main>
+
+
+<!-- =========================
+     BOTTOM NAVIGATION
+========================= -->
 
 <nav class="bottomNav">
 
-  <button class="navButton active" onclick="switchScreen('home',this)">
-    <span class="navIcon">🏠</span>Home
-  </button>
+    <button
+        class="navButton active"
+        onclick="switchScreen('home',this)">
 
-  <button class="navButton" onclick="switchScreen('chest',this)">
-    <span class="navIcon">🎁</span>Chest
-  </button>
+        <span class="navIcon">
+            🏠
+        </span>
 
-  <button class="navButton" onclick="switchScreen('dex',this)">
-    <span class="navIcon">📖</span>SpriteDex
-  </button>
+        Home
 
-  <button class="navButton" onclick="switchScreen('shop',this)">
-    <span class="navIcon">✨</span>Shop
-  </button>
+    </button>
 
-  <button class="navButton" onclick="switchScreen('account',this)">
-  <span class="navIcon">👤</span>Account
-</button>
+
+    <button
+        class="navButton"
+        onclick="switchScreen('chest',this)">
+
+        <span class="navIcon">
+            🎁
+        </span>
+
+        Chest
+
+    </button>
+
+
+    <button
+        class="navButton"
+        onclick="switchScreen('dex',this)">
+
+        <span class="navIcon">
+            📖
+        </span>
+
+        SpriteDex
+
+    </button>
+
+
+    <button
+        class="navButton"
+        onclick="switchScreen('shop',this)">
+
+        <span class="navIcon">
+            ✨
+        </span>
+
+        Shop
+
+    </button>
+
+
+    <button
+        class="navButton"
+        onclick="switchScreen('account',this)">
+
+        <span class="navIcon">
+            👤
+        </span>
+
+        Account
+
+    </button>
 
 </nav>
+
 </div>
 
-<div class="overlay" id="overlay">
-  <div class="resultBox">
-    <div class="resultStage" id="resultStage">SPRITE DISCOVERED</div>
-    <div class="resultSprite" id="resultSprite"></div>
-    <div class="resultName" id="resultName">Water Sprite</div>
-    <div class="resultVariant" id="resultVariant">???</div>
-    <div class="resultRarity" id="resultRarity">Rare</div>
-    <div class="resultDescription" id="resultDescription"></div>
-    <button class="continueButton" id="continueButton" onclick="continueResult()">Reveal Variant</button>
-  </div>
+
+<!-- =========================
+     REVEAL OVERLAY
+========================= -->
+
+<div
+    class="overlay"
+    id="overlay">
+
+    <div class="resultBox">
+
+        <div
+            class="resultStage"
+            id="resultStage">
+            SPRITE DISCOVERED
+        </div>
+
+
+        <div
+            class="resultSprite"
+            id="resultSprite">
+        </div>
+
+
+        <div
+            class="resultName"
+            id="resultName">
+            Water Sprite
+        </div>
+
+
+        <div
+            class="resultVariant"
+            id="resultVariant">
+            ???
+        </div>
+
+
+        <div
+            class="resultRarity"
+            id="resultRarity">
+            Rare
+        </div>
+
+
+        <div
+            class="resultDescription"
+            id="resultDescription">
+        </div>
+
+
+        <button
+            class="continueButton"
+            id="continueButton"
+            onclick="continueResult()">
+            Reveal Variant
+        </button>
+
+    </div>
+
 </div>
-const SUPABASE_URL = "https://idszjgyeffnvjavzthwq.supabase.co";
 
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlkc3pqZ3llZmZudmphdnp0aHdxIiwiaWF0IjoxNzg2ODYxOTY5LCJleHAiOjIxMDI0Mzc5Njl9.rUkcJveOPcZ1ctzWp8GwECBB9LEaRmP353EYHuw4aDw";
 
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
+<!-- =========================
+     JAVASCRIPT
+========================= -->
+
 <script>
+
+/* =========================
+   SUPABASE
+========================= */
+
+const SUPABASE_URL =
+    "https://idszjgyeffnvjavzthwq.supabase.co";
+
+const SUPABASE_ANON_KEY =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlkc3pqZ3llZmZudmphdnp0aHdxIiwiaWF0IjoxNzg2ODYxOTY5LCJleHAiOjIxMDI0Mzc5Njl9.rUkcJveOPcZ1ctzWp8GwECBB9LEaRmP353EYHuw4aDw";
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
+
+
+/* =========================
+   SPRITES
+========================= */
+
 const sprites = [
-  {
-    id:"water",
-    name:"Water Sprite",
-    image:"water.png",
-    rarity:"rare",
-    description:"A playful water Sprite.",
-    variants:{
-      normal:"water.png",
-      gold:"water-gold.png",
-      gummy:"water-gummy.png",
-      galaxy:"water-galaxy.png",
-      gem:"water-gem.png"
-    }
-  },
 
-  {
-    id:"earth",
-    name:"Earth Sprite",
-    image:"earth.png",
-    rarity:"rare",
-    description:"A small Sprite connected to the earth.",
-    variants:{
-      normal:"earth.png",
-      gold:"earth-gold.png",
-      gummy:"earth-gummy.png",
-      galaxy:"earth-galaxy.png",
-      gem:"earth-gem.png"
-    }
-  },
+    {
+        id:"water",
+        name:"Water Sprite",
+        image:"water.png",
+        rarity:"rare",
+        description:"A playful water Sprite.",
+        variants:{
+            normal:"water.png",
+            gold:"water-gold.png",
+            gummy:"water-gummy.png",
+            galaxy:"water-galaxy.png",
+            gem:"water-gem.png"
+        }
+    },
 
-  {
-    id:"fire",
-    name:"Fire Sprite",
-    image:"fire.png",
-    rarity:"rare",
-    description:"A fiery little Sprite.",
-    variants:{
-      normal:"fire.png",
-      gold:"fire-gold.png",
-      gummy:"fire-gummy.png",
-      galaxy:"fire-galaxy.png",
-      gem:"fire-gem.png"
-    }
-  },
+    {
+        id:"earth",
+        name:"Earth Sprite",
+        image:"earth.png",
+        rarity:"rare",
+        description:"A small Sprite connected to the earth.",
+        variants:{
+            normal:"earth.png",
+            gold:"earth-gold.png",
+            gummy:"earth-gummy.png",
+            galaxy:"earth-galaxy.png",
+            gem:"earth-gem.png"
+        }
+    },
 
-  {
-    id:"duck",
-    name:"Duck Sprite",
-    image:"duck.png",
-    rarity:"epic",
-    description:"A strange but cheerful duck Sprite.",
-    variants:{
-      normal:"duck.png",
-      gold:"duck-gold.png",
-      gummy:"duck-gummy.png",
-      galaxy:"duck-galaxy.png",
-      gem:"duck-gem.png"
-    }
-  },
+    {
+        id:"fire",
+        name:"Fire Sprite",
+        image:"fire.png",
+        rarity:"rare",
+        description:"A fiery little Sprite.",
+        variants:{
+            normal:"fire.png",
+            gold:"fire-gold.png",
+            gummy:"fire-gummy.png",
+            galaxy:"fire-galaxy.png",
+            gem:"fire-gem.png"
+        }
+    },
 
-  {
-    id:"ghost",
-    name:"Ghost Sprite",
-    image:"ghost.png",
-    rarity:"epic",
-    description:"A mysterious ghostly Sprite.",
-    variants:{
-      normal:"ghost.png",
-      gold:"ghost-gold.png",
-      gummy:"ghost-gummy.png",
-      galaxy:"ghost-galaxy.png",
-      gem:"ghost-gem.png"
-    }
-  },
+    {
+        id:"duck",
+        name:"Duck Sprite",
+        image:"duck.png",
+        rarity:"epic",
+        description:"A strange but cheerful duck Sprite.",
+        variants:{
+            normal:"duck.png",
+            gold:"duck-gold.png",
+            gummy:"duck-gummy.png",
+            galaxy:"duck-galaxy.png",
+            gem:"duck-gem.png"
+        }
+    },
 
-  {
-    id:"dream",
-    name:"Dream Sprite",
-    image:"dream.png",
-    rarity:"legendary",
-    description:"A mysterious Sprite from the dream realm.",
-    variants:{
-      normal:"dream.png",
-      gold:"dream-gold.png",
-      gummy:"dream-gummy.png",
-      galaxy:"dream-galaxy.png",
-      gem:"dream-gem.png"
-    }
-  },
+    {
+        id:"ghost",
+        name:"Ghost Sprite",
+        image:"ghost.png",
+        rarity:"epic",
+        description:"A mysterious ghostly Sprite.",
+        variants:{
+            normal:"ghost.png",
+            gold:"ghost-gold.png",
+            gummy:"ghost-gummy.png",
+            galaxy:"ghost-galaxy.png",
+            gem:"ghost-gem.png"
+        }
+    },
 
-  {
-    id:"Sussy",
-    name:"Sussy Sprite",
-    image:"sussy.png",
-    rarity:"Rourke",
-    description:"A mysterious Sprite from the dream realm."
-  },
+    {
+        id:"dream",
+        name:"Dream Sprite",
+        image:"dream.png",
+        rarity:"legendary",
+        description:"A mysterious Sprite from the dream realm.",
+        variants:{
+            normal:"dream.png",
+            gold:"dream-gold.png",
+            gummy:"dream-gummy.png",
+            galaxy:"dream-galaxy.png",
+            gem:"dream-gem.png"
+        }
+    },
 
-  {
-    id:"demon",
-    name:"Demon Sprite",
-    image:"demon.png",
-    rarity:"epic",
-    description:"A powerful demonic Sprite.",
-    variants:{
-      normal:"demon.png",
-      gold:"demon-gold.png",
-      gummy:"demon-gummy.png",
-      galaxy:"demon-galaxy.png",
-      gem:"demon-gem.png"
-    }
-  },
+    /* =========================
+       SUSSY SPRITE FIXED
+    ========================= */
 
-  {
-    id:"king",
-    name:"King Sprite",
-    image:"king.png",
-    rarity:"epic",
-    description:"A royal Sprite.",
-    variants:{
-      normal:"king.png",
-      gold:"king-gold.png",
-      gummy:"king-gummy.png",
-      galaxy:"king-galaxy.png",
-      gem:"king-gem.png"
-    }
-  },
+    {
+        id:"sussy",
+        name:"Sussy Sprite",
+        image:"sussy.png",
+        rarity:"rourke",
+        description:"An extremely suspicious Sprite. Nobody knows where it came from.",
+        variants:{
+            normal:"sussy.png",
+            gold:"sussy-gold.png",
+            gummy:"sussy-gummy.png",
+            galaxy:"sussy-galaxy.png",
+            gem:"sussy-gem.png",
+            rourke:"sussy-rourke.png"
+        }
+    },
 
-  {
-    id:"punk",
-    name:"Punk Sprite",
-    image:"punk.png",
-    rarity:"legendary",
-    description:"A rebellious punk Sprite.",
-    variants:{
-      normal:"punk.png",
-      gold:"punk-gold.png",
-      gummy:"punk-gummy.png",
-      galaxy:"punk-galaxy.png",
-      gem:"punk-gem.png"
-    }
-  },
+    {
+        id:"demon",
+        name:"Demon Sprite",
+        image:"demon.png",
+        rarity:"epic",
+        description:"A powerful demonic Sprite.",
+        variants:{
+            normal:"demon.png",
+            gold:"demon-gold.png",
+            gummy:"demon-gummy.png",
+            galaxy:"demon-galaxy.png",
+            gem:"demon-gem.png"
+        }
+    },
 
-  {
-    id:"zero",
-    name:"Zero Point Sprite",
-    image:"zeropoint.png",
-    rarity:"mythic",
-    description:"A mysterious Sprite connected to the Zero Point.",
-    variants:{
-      normal:"zeropoint.png",
-      gold:"zeropoint-gold.png",
-      gummy:"zeropoint-gummy.png",
-      galaxy:"zeropoint-galaxy.png",
-      gem:"zeropoint-gem.png"
+    {
+        id:"king",
+        name:"King Sprite",
+        image:"king.png",
+        rarity:"epic",
+        description:"A royal Sprite.",
+        variants:{
+            normal:"king.png",
+            gold:"king-gold.png",
+            gummy:"king-gummy.png",
+            galaxy:"king-galaxy.png",
+            gem:"king-gem.png"
+        }
+    },
+
+    {
+        id:"punk",
+        name:"Punk Sprite",
+        image:"punk.png",
+        rarity:"legendary",
+        description:"A rebellious punk Sprite.",
+        variants:{
+            normal:"punk.png",
+            gold:"punk-gold.png",
+            gummy:"punk-gummy.png",
+            galaxy:"punk-galaxy.png",
+            gem:"punk-gem.png"
+        }
+    },
+
+    {
+        id:"zero",
+        name:"Zero Point Sprite",
+        image:"zeropoint.png",
+        rarity:"mythic",
+        description:"A mysterious Sprite connected to the Zero Point.",
+        variants:{
+            normal:"zeropoint.png",
+            gold:"zeropoint-gold.png",
+            gummy:"zeropoint-gummy.png",
+            galaxy:"zeropoint-galaxy.png",
+            gem:"zeropoint-gem.png"
+        }
     }
-  }
+
 ];
-console.log("Sprites loaded:", sprites);
+
+console.log("Sprites loaded:",sprites);
+
+
+/* =========================
+   VARIANTS
+========================= */
+
 const variants = [
-  {id:"normal",name:"Normal",chance:70,rarity:"Base",className:"variant-normal"},
-  {id:"gold",name:"Gold",chance:12,rarity:"Rare",className:"variant-gold"},
-  {id:"gummy",name:"Gummy",chance:5,rarity:"Epic",className:"variant-gummy"},
-  {id:"galaxy",name:"Galaxy",chance:3,rarity:"Legendary",className:"variant-galaxy"},
-  {id:"gem",name:"Gem",chance:.4,rarity:"Mythic",className:"variant-gem"},
-  {id:"Rourke",name:"Rourke",chance:0.09,rarity:"Rourke",className:"variant-Rourke"}
+
+    {
+        id:"normal",
+        name:"Normal",
+        chance:70,
+        rarity:"Base",
+        className:"variant-normal"
+    },
+
+    {
+        id:"gold",
+        name:"Gold",
+        chance:12,
+        rarity:"Rare",
+        className:"variant-gold"
+    },
+
+    {
+        id:"gummy",
+        name:"Gummy",
+        chance:5,
+        rarity:"Epic",
+        className:"variant-gummy"
+    },
+
+    {
+        id:"galaxy",
+        name:"Galaxy",
+        chance:3,
+        rarity:"Legendary",
+        className:"variant-galaxy"
+    },
+
+    {
+        id:"gem",
+        name:"Gem",
+        chance:0.4,
+        rarity:"Mythic",
+        className:"variant-gem"
+    },
+
+    {
+        id:"rourke",
+        name:"Rourke",
+        chance:0.09,
+        rarity:"Rourke",
+        className:"variant-rourke"
+    }
+
 ];
 
-let game={
-  level:1,
-  coins:100,
-  xp:0,
-  keys:100,
-  dust:100,
-  collection:[]
+
+/* =========================
+   GAME DATA
+========================= */
+
+let game = {
+
+    level:1,
+    coins:100,
+    xp:0,
+    keys:10,
+    dust:0,
+    collection:[],
+    lastDailyReward:0
+
 };
 
-let currentSprite=null,currentVariant=null,chestBusy=false;
+let currentSprite = null;
+let currentVariant = null;
+let chestBusy = false;
 
-function saveGame(){localStorage.setItem("spriteBoundSave",JSON.stringify(game))}
-function loadGame(){
-  const saved=localStorage.getItem("spriteBoundSave");
-  if(!saved)return;
 
-  try{
-    const d=JSON.parse(saved);
+/* =========================
+   LOCAL SAVE
+========================= */
 
-    game.level=d.level||1;
-    game.coins=d.coins??100;
-    game.xp=d.xp||0;
-    game.keys=d.keys??10;
-    game.dust=d.dust??0;
-    game.collection=d.collection||[];
-game.lastDailyReward=d.lastDailyReward||0;
-  }catch(e){}
+function saveGame(){
+
+    localStorage.setItem(
+        "spriteBoundSave",
+        JSON.stringify(game)
+    );
+
 }
+
+
+function loadGame(){
+
+    const saved =
+        localStorage.getItem("spriteBoundSave");
+
+    if(!saved)return;
+
+    try{
+
+        const d = JSON.parse(saved);
+
+        game.level = d.level ?? 1;
+        game.coins = d.coins ?? 100;
+        game.xp = d.xp ?? 0;
+        game.keys = d.keys ?? 10;
+        game.dust = d.dust ?? 0;
+        game.collection = d.collection ?? [];
+        game.lastDailyReward = d.lastDailyReward ?? 0;
+
+    }catch(error){
+
+        console.error(
+            "Could not load local save:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================
+   DAILY REWARD
+========================= */
 
 function claimDailyReward(){
-  const now=Date.now();
-  const oneDay=24*60*60*1000;
 
-  if(now-game.lastDailyReward < oneDay){
-    const remaining=oneDay-(now-game.lastDailyReward);
-    const hours=Math.ceil(remaining/(60*60*1000));
+    const now = Date.now();
+    const oneDay = 24 * 60 * 60 * 1000;
 
-    alert("You've already claimed your reward! 🔒\nCome back in about "+hours+" hours.");
-    return;
-  }
- 
-  game.keys+=3;
-  game.lastDailyReward=now;
+    if(
+        now - game.lastDailyReward <
+        oneDay
+    ){
 
-  saveGame();
-  updateUI();
-  updateDailyReward();
+        const remaining =
+            oneDay -
+            (now - game.lastDailyReward);
 
-  alert("Daily Reward Claimed! 🎁\n+3 Keys 🔑");
+        const hours =
+            Math.ceil(
+                remaining /
+                (60 * 60 * 1000)
+            );
+
+        alert(
+            "You've already claimed your reward! 🔒\n" +
+            "Come back in about " +
+            hours +
+            " hours."
+        );
+
+        return;
+    }
+
+    game.keys += 3;
+    game.lastDailyReward = now;
+
+    saveGame();
+    updateUI();
+    updateDailyReward();
+
+    alert(
+        "Daily Reward Claimed! 🎁\n+3 Keys 🔑"
+    );
+
 }
-function switchScreen(screen,button){
-  document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));
-  document.getElementById(screen+"Screen").classList.add("active");
-  document.querySelectorAll(".navButton").forEach(x=>x.classList.remove("active"));
-  button.classList.add("active");
-  if(screen==="dex")renderDex();
-}
+
 
 function updateDailyReward(){
-  const button=document.getElementById("dailyRewardButton");
-  const text=document.getElementById("dailyRewardText");
 
-  if(!button || !text)return;
+    const button =
+        document.getElementById(
+            "dailyRewardButton"
+        );
 
-  const now=Date.now();
-  const oneDay=24*60*60*1000;
+    const text =
+        document.getElementById(
+            "dailyRewardText"
+        );
 
-  if(now-game.lastDailyReward >= oneDay){
-    button.disabled=false;
-    button.textContent="Claim +3 Keys";
-    text.textContent="Your daily reward is ready! 🎁";
-    button.style.opacity="1";
-  }else{
-    const remaining=oneDay-(now-game.lastDailyReward);
-    const hours=Math.ceil(remaining/(60*60*1000));
+    if(!button || !text)return;
 
-    button.disabled=true;
-    button.textContent="Already Claimed";
-    text.textContent="Come back in about "+hours+" hours.";
-    button.style.opacity=".5";
-  }
+    const now = Date.now();
+    const oneDay = 24 * 60 * 60 * 1000;
+
+    if(
+        now - game.lastDailyReward >=
+        oneDay
+    ){
+
+        button.disabled = false;
+        button.textContent = "Claim +3 Keys";
+        text.textContent =
+            "Your daily reward is ready! 🎁";
+        button.style.opacity = "1";
+
+    }else{
+
+        const remaining =
+            oneDay -
+            (now - game.lastDailyReward);
+
+        const hours =
+            Math.ceil(
+                remaining /
+                (60 * 60 * 1000)
+            );
+
+        button.disabled = true;
+        button.textContent = "Already Claimed";
+
+        text.textContent =
+            "Come back in about " +
+            hours +
+            " hours.";
+
+        button.style.opacity = ".5";
+
+    }
+
 }
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function switchScreen(screen,button){
+
+    document
+        .querySelectorAll(".screen")
+        .forEach(x =>
+            x.classList.remove("active")
+        );
+
+    const target =
+        document.getElementById(
+            screen + "Screen"
+        );
+
+    if(!target)return;
+
+    target.classList.add("active");
+
+    document
+        .querySelectorAll(".navButton")
+        .forEach(x =>
+            x.classList.remove("active")
+        );
+
+    button.classList.add("active");
+
+    if(screen === "dex"){
+        renderDex();
+    }
+
+}
+
+
+/* =========================
+   SPRITE SELECTION
+========================= */
 
 function chooseSprite(){
-  const available=sprites.filter(s=>s.image);
-  const roll=Math.random()*100;
-  let rarity=roll<55?"uncommon":roll<83?"rare":roll<95?"epic":"legendary";
-  let possible=available.filter(s=>s.rarity===rarity);
-  if(!possible.length)possible=available;
-  return possible[Math.floor(Math.random()*possible.length)];
+
+    const available =
+        sprites.filter(
+            s => s.image && s.variants
+        );
+
+    const roll = Math.random() * 100;
+
+    let rarity;
+
+    if(roll < 55){
+
+        rarity = "uncommon";
+
+    }else if(roll < 83){
+
+        rarity = "rare";
+
+    }else if(roll < 95){
+
+        rarity = "epic";
+
+    }else{
+
+        rarity = "legendary";
+
+    }
+
+    let possible =
+        available.filter(
+            s =>
+                s.rarity === rarity
+        );
+
+    if(!possible.length){
+
+        possible = available;
+
+    }
+
+    return possible[
+        Math.floor(
+            Math.random() *
+            possible.length
+        )
+    ];
+
 }
+
+
+/* =========================
+   VARIANT SELECTION
+========================= */
 
 function chooseVariant(){
-  const roll=Math.random()*100;
-  let total=0;
-  for(const v of variants){total+=v.chance;if(roll<total)return v}
-  return variants[0];
+
+    const roll =
+        Math.random() * 100;
+
+    let total = 0;
+
+    for(const v of variants){
+
+        total += v.chance;
+
+        if(roll < total){
+
+            return v;
+
+        }
+
+    }
+
+    return variants[0];
+
 }
+
+
+/* =========================
+   CHEST
+========================= */
 
 function openChest(){
-  if(chestBusy)return;
 
-  // Check if the player has a key
-  if(game.keys <= 0){
-    alert("You don't have any keys! 🔑");
-    return;
-  }
+    if(chestBusy)return;
 
-  // Spend one key
-  game.keys--;
+    if(game.keys <= 0){
 
-  // Update the UI and save
-  updateUI();
-  saveGame();
+        alert(
+            "You don't have any keys! 🔑"
+        );
 
-  chestBusy=true;
-  currentSprite=chooseSprite();
-  currentVariant=null;
+        return;
 
-  const chest=document.getElementById("chestContainer");
+    }
 
-  document.getElementById("chestGlow").style.background=
-    rarityColour(currentSprite.rarity);
+    game.keys--;
 
-  document.getElementById("chestGlow").style.opacity=".65";
+    updateUI();
+    saveGame();
 
-  chest.classList.add("shaking");
+    chestBusy = true;
 
-  setTimeout(()=>{
-    chest.classList.remove("shaking");
-    chest.classList.add("opening");
-  },1000);
+    currentSprite = chooseSprite();
+    currentVariant = null;
 
-  setTimeout(showSpriteReveal,1800);
+    const chest =
+        document.getElementById(
+            "chestContainer"
+        );
+
+    const glow =
+        document.getElementById(
+            "chestGlow"
+        );
+
+    glow.style.background =
+        rarityColour(
+            currentSprite.rarity
+        );
+
+    glow.style.opacity = ".65";
+
+    chest.classList.add("shaking");
+
+    setTimeout(() => {
+
+        chest.classList.remove("shaking");
+        chest.classList.add("opening");
+
+    },1000);
+
+    setTimeout(
+        showSpriteReveal,
+        1800
+    );
+
 }
+
+
+/* =========================
+   FIRST REVEAL
+========================= */
 
 function showSpriteReveal(){
-  const overlay=document.getElementById("overlay");
-  document.getElementById("resultStage").textContent="SPRITE DISCOVERED";
-  document.getElementById("resultName").textContent=currentSprite.name;
-  document.getElementById("resultVariant").textContent="???";
-  document.getElementById("resultRarity").textContent=currentSprite.rarity;
-  document.getElementById("resultRarity").className="resultRarity "+currentSprite.rarity;
-  document.getElementById("resultDescription").textContent=currentSprite.description;
-  document.getElementById("continueButton").textContent="Reveal Variant";
-  const box=document.getElementById("resultSprite");
-  box.innerHTML="";
-  const img=document.createElement("img");
-  img.src=currentSprite.image;
-  img.alt=currentSprite.name;
-  box.appendChild(img);
-  overlay.classList.add("show");
+
+    const overlay =
+        document.getElementById(
+            "overlay"
+        );
+
+    document.getElementById(
+        "resultStage"
+    ).textContent =
+        "SPRITE DISCOVERED";
+
+    document.getElementById(
+        "resultName"
+    ).textContent =
+        currentSprite.name;
+
+    document.getElementById(
+        "resultVariant"
+    ).textContent =
+        "???";
+
+    document.getElementById(
+        "resultRarity"
+    ).textContent =
+        currentSprite.rarity;
+
+    document.getElementById(
+        "resultRarity"
+    ).className =
+        "resultRarity " +
+        currentSprite.rarity;
+
+    document.getElementById(
+        "resultDescription"
+    ).textContent =
+        currentSprite.description;
+
+    document.getElementById(
+        "continueButton"
+    ).textContent =
+        "Reveal Variant";
+
+    const box =
+        document.getElementById(
+            "resultSprite"
+        );
+
+    box.innerHTML = "";
+
+    const img =
+        document.createElement("img");
+
+    img.src =
+        currentSprite.image;
+
+    img.alt =
+        currentSprite.name;
+
+    box.appendChild(img);
+
+    overlay.classList.add("show");
+
 }
+
+
+/* =========================
+   REVEAL VARIANT
+========================= */
 
 function continueResult(){
-  if(!currentVariant){currentVariant=chooseVariant();revealVariant();return}
-  finishChest();
+
+    if(!currentVariant){
+
+        currentVariant =
+            chooseVariant();
+
+        revealVariant();
+
+        return;
+
+    }
+
+    finishChest();
+
 }
+
 
 function revealVariant(){
-  const stage=document.getElementById("resultStage");
-  const variantEl=document.getElementById("resultVariant");
-  const rarityEl=document.getElementById("resultRarity");
-  const button=document.getElementById("continueButton");
-  const box=document.getElementById("resultSprite");
-  const img=box.querySelector("img");
 
-  if(img){
-    img.src=currentSprite.variants[currentVariant.id];
-    img.alt=currentSprite.name+" - "+currentVariant.name;
+    const stage =
+        document.getElementById(
+            "resultStage"
+        );
 
-    img.className="";
-    img.style.animation="none";
+    const variantEl =
+        document.getElementById(
+            "resultVariant"
+        );
 
-    requestAnimationFrame(()=>{
-      img.style.animation="variantPulse .9s ease-out";
-    });
-  }
+    const rarityEl =
+        document.getElementById(
+            "resultRarity"
+        );
 
-  variantEl.textContent=
-    currentVariant.name==="Normal"
-      ?"Normal Variant"
-      :currentVariant.name+" Variant";
+    const button =
+        document.getElementById(
+            "continueButton"
+        );
 
-  if(currentVariant.rarity==="Base"){
-    rarityEl.textContent=currentSprite.rarity;
-    rarityEl.className="resultRarity "+currentSprite.rarity;
-  }else{
-    rarityEl.textContent=currentVariant.rarity+" Variant";
-    rarityEl.className="resultRarity "+currentVariant.rarity;
-  }
+    const box =
+        document.getElementById(
+            "resultSprite"
+        );
 
-  const titles={
-    gold:"🟡 GOLD VARIANT!",
-    gummy:"🍬 GUMMY VARIANT!",
-    galaxy:"🌌 GALAXY VARIANT!",
-    cube:"🧊 CUBE VARIANT!",
-    gem:"💎 MYTHIC GEM VARIANT!"
-  };
+    const img =
+        box.querySelector("img");
 
-  stage.textContent=titles[currentVariant.id]||"SPRITE DISCOVERED";
 
-  button.textContent="Collect";
+    /* Make sure the sprite has the selected variant */
 
-  const collectionID=
-    currentSprite.id+"_"+currentVariant.id;
+    let imagePath =
+        currentSprite.variants[
+            currentVariant.id
+        ];
 
-  // Check whether this is a duplicate
-  const duplicate=game.collection.includes(collectionID);
+    if(!imagePath){
 
-  if(!duplicate){
-    // First time collecting this variant
-    game.collection.push(collectionID);
+        imagePath =
+            currentSprite.image;
 
-    rewardForVariant(currentVariant);
+    }
 
-    stage.textContent=
-      titles[currentVariant.id]||"SPRITE DISCOVERED";
-  }else{
-    // Duplicate = bonus dust
-    const duplicateDust={
-      normal:75,
-      gold:150,
-      gummy:200,
-      galaxy:250,
-      gem:300
+
+    if(img){
+
+        img.src = imagePath;
+
+        img.alt =
+            currentSprite.name +
+            " - " +
+            currentVariant.name;
+
+        img.className =
+            currentVariant.className ||
+            "variant-normal";
+
+        img.style.animation = "none";
+
+        requestAnimationFrame(() => {
+
+            img.style.animation =
+                "variantPulse .9s ease-out";
+
+        });
+
+    }
+
+
+    variantEl.textContent =
+        currentVariant.name === "Normal"
+            ? "Normal Variant"
+            : currentVariant.name +
+              " Variant";
+
+
+    if(
+        currentVariant.rarity ===
+        "Base"
+    ){
+
+        rarityEl.textContent =
+            currentSprite.rarity;
+
+        rarityEl.className =
+            "resultRarity " +
+            currentSprite.rarity;
+
+    }else{
+
+        rarityEl.textContent =
+            currentVariant.rarity +
+            " Variant";
+
+        rarityEl.className =
+            "resultRarity " +
+            currentVariant.rarity.toLowerCase();
+
+    }
+
+
+    const titles = {
+
+        gold:
+            "🟡 GOLD VARIANT!",
+
+        gummy:
+            "🍬 GUMMY VARIANT!",
+
+        galaxy:
+            "🌌 GALAXY VARIANT!",
+
+        gem:
+            "💎 MYTHIC GEM VARIANT!",
+
+        rourke:
+            "💠 ROURKE VARIANT!"
+
     };
 
-    const dust=duplicateDust[currentVariant.id]||10;
 
-    game.dust+=dust;
+    stage.textContent =
+        titles[currentVariant.id] ||
+        "SPRITE DISCOVERED";
 
-    stage.textContent="DUPLICATE! ✨ +"+dust+" DUST";
-  }
 
-  saveGame();
-  updateUI();
+    button.textContent =
+        "Collect";
+
+
+    const collectionID =
+        currentSprite.id +
+        "_" +
+        currentVariant.id;
+
+
+    const duplicate =
+        game.collection.includes(
+            collectionID
+        );
+
+
+    if(!duplicate){
+
+        game.collection.push(
+            collectionID
+        );
+
+        rewardForVariant(
+            currentVariant
+        );
+
+    }else{
+
+        const duplicateDust = {
+
+            normal:75,
+            gold:150,
+            gummy:200,
+            galaxy:250,
+            gem:300,
+            rourke:1000
+
+        };
+
+        const dust =
+            duplicateDust[
+                currentVariant.id
+            ] || 10;
+
+        game.dust += dust;
+
+        stage.textContent =
+            "DUPLICATE! ✨ +" +
+            dust +
+            " DUST";
+
+    }
+
+
+    saveGame();
+    updateUI();
+
 }
+
+
+/* =========================
+   FINISH CHEST
+========================= */
+
 function finishChest(){
-  document.getElementById("overlay").classList.remove("show");
-  document.getElementById("chestContainer").classList.remove("opening");
-  document.getElementById("chestGlow").style.opacity=".25";
-  currentSprite=null;currentVariant=null;chestBusy=false;
+
+    document
+        .getElementById("overlay")
+        .classList.remove("show");
+
+    document
+        .getElementById("chestContainer")
+        .classList.remove("opening");
+
+    document
+        .getElementById("chestGlow")
+        .style.opacity = ".25";
+
+    currentSprite = null;
+    currentVariant = null;
+    chestBusy = false;
+
 }
+
+
+/* =========================
+   REWARDS
+========================= */
 
 function rewardForVariant(v){
 
-  const rewards={
-    normal:[5,10,500000],
-    gold:[20,30,10],
-    gummy:[50,70,20],
-    galaxy:[150,150,50],
-    gem:[2000,1000,150]
-  };
+    const rewards = {
 
-  const reward=rewards[v.id];
+        normal:{
+            coins:5,
+            xp:10,
+            dust:5
+        },
 
-  if(!reward)return;
+        gold:{
+            coins:20,
+            xp:30,
+            dust:10
+        },
 
-  const coins=reward[0];
-  const xp=reward[1];
-  const dust=reward[4];
+        gummy:{
+            coins:50,
+            xp:70,
+            dust:20
+        },
 
-  game.coins+=coins;
-  game.dust+=dust;
+        galaxy:{
+            coins:150,
+            xp:150,
+            dust:50
+        },
 
-  addXP(xp);
-}
-function buyKeys(amount){
-  const prices = {
-    1: 100,
-    5: 450,
-    10: 800
-  };
+        gem:{
+            coins:2000,
+            xp:1000,
+            dust:150
+        },
 
-  const price = prices[amount];
+        rourke:{
+            coins:5000,
+            xp:2500,
+            dust:500
+        }
 
-  if (!price) {
-    console.error("Invalid key amount:", amount);
-    return;
-  }
+    };
 
-  if (game.dust < price) {
-    alert(
-      "Not enough Sprite Dust! ✨\n\n" +
-      "You have: " + game.dust + " Dust\n" +
-      "You need: " + price + " Dust"
+
+    const reward =
+        rewards[v.id];
+
+    if(!reward)return;
+
+    game.coins +=
+        reward.coins;
+
+    game.dust +=
+        reward.dust;
+
+    addXP(
+        reward.xp
     );
-    return;
-  }
 
-  game.dust -= price;
-  game.keys += amount;
-
-  saveGame();
-  updateUI();
-
-  alert(
-    "Purchase successful! 🔑\n\n" +
-    "+" + amount + " Key" + (amount === 1 ? "" : "s")
-  );
 }
 
+
+/* =========================
+   SHOP
+========================= */
+
+function buyKeys(amount){
+
+    const prices = {
+
+        1:100,
+        5:450,
+        10:800
+
+    };
+
+
+    const price =
+        prices[amount];
+
+
+    if(!price){
+
+        console.error(
+            "Invalid key amount:",
+            amount
+        );
+
+        return;
+
+    }
+
+
+    if(game.dust < price){
+
+        alert(
+            "Not enough Sprite Dust! ✨\n\n" +
+            "You have: " +
+            game.dust +
+            " Dust\n" +
+            "You need: " +
+            price +
+            " Dust"
+        );
+
+        return;
+
+    }
+
+
+    game.dust -= price;
+    game.keys += amount;
+
+    saveGame();
+    updateUI();
+
+    alert(
+        "Purchase successful! 🔑\n\n+" +
+        amount +
+        " Key" +
+        (amount === 1 ? "" : "s")
+    );
+
+}
+
+
+/* =========================
+   XP
+========================= */
 
 function addXP(amount){
-  game.xp+=amount;
-  let needed=game.level*100;
-  while(game.xp>=needed){game.xp-=needed;game.level++;needed=game.level*100}
+
+    game.xp += amount;
+
+    let needed =
+        game.level * 100;
+
+    while(
+        game.xp >= needed
+    ){
+
+        game.xp -= needed;
+        game.level++;
+
+        needed =
+            game.level * 100;
+
+    }
+
 }
 
-function rarityColour(r){
-  return {
-    uncommon:"#46F527",
-    rare:"#275BF5",
-    epic:"#CC27F5",
-    legendary:"#F5C827",
-    mythic:"#FFDD43",
-    Rourke:"#27F5F2"
-  }[r.toLowerCase()] || "#67e8f9";
+
+/* =========================
+   RARITY COLOUR
+========================= */
+
+function rarityColour(rarity){
+
+    const colours = {
+
+        uncommon:"#46F527",
+        rare:"#275BF5",
+        epic:"#CC27F5",
+        legendary:"#F5C827",
+        mythic:"#FFDD43",
+        rourke:"#27F5F2"
+
+    };
+
+    return colours[
+        String(rarity).toLowerCase()
+    ] || "#67e8f9";
+
 }
 
-function totalCollectionSize(){return sprites.filter(s=>s.image).length*variants.length}
+
+/* =========================
+   COLLECTION
+========================= */
+
+function totalCollectionSize(){
+
+    let total = 0;
+
+    sprites.forEach(sprite => {
+
+        if(sprite.variants){
+
+            total +=
+                Object.keys(
+                    sprite.variants
+                ).length;
+
+        }
+
+    });
+
+    return total;
+
+}
+
+
+/* =========================
+   UPDATE UI
+========================= */
 
 function updateUI(){
-  const total=totalCollectionSize(),collected=game.collection.length,pct=total?collected/total*100:0;
-  document.getElementById("level").textContent=game.level;
-  document.getElementById("coins").textContent=game.coins;
-  document.getElementById("keys").textContent=game.keys;
-  document.getElementById("dust").textContent=game.dust;
-  document.getElementById("collectionCount").textContent=collected;
-  document.getElementById("homeCollection").textContent=collected;
-  document.getElementById("homeLevel").textContent=game.level;
-  document.getElementById("homeProgress").style.width=pct+"%";
-  document.getElementById("dexProgress").textContent=collected+" / "+total;
-  document.getElementById("dexProgressBar").style.width=pct+"%";
+
+    const total =
+        totalCollectionSize();
+
+    const collected =
+        game.collection.length;
+
+    const pct =
+        total
+            ? collected / total * 100
+            : 0;
+
+
+    document.getElementById(
+        "level"
+    ).textContent =
+        game.level;
+
+    document.getElementById(
+        "coins"
+    ).textContent =
+        game.coins;
+
+    document.getElementById(
+        "keys"
+    ).textContent =
+        game.keys;
+
+    document.getElementById(
+        "dust"
+    ).textContent =
+        game.dust;
+
+    document.getElementById(
+        "collectionCount"
+    ).textContent =
+        collected;
+
+    document.getElementById(
+        "homeCollection"
+    ).textContent =
+        collected;
+
+    document.getElementById(
+        "homeLevel"
+    ).textContent =
+        game.level;
+
+    document.getElementById(
+        "homeProgress"
+    ).style.width =
+        pct + "%";
+
+    document.getElementById(
+        "dexProgress"
+    ).textContent =
+        collected +
+        " / " +
+        total;
+
+    document.getElementById(
+        "dexProgressBar"
+    ).style.width =
+        pct + "%";
+
+    updateDailyReward();
+
 }
 
+
+/* =========================
+   SPRITEDEX
+========================= */
+
 function renderDex(){
-  const grid=document.getElementById("dexGrid");grid.innerHTML="";
-  sprites.forEach(sprite=>{
-    const card=document.createElement("div");card.className="dexCard";
-    let variantsHTML="";
-    variants.forEach(v=>{
-      const owned=game.collection.includes(sprite.id+"_"+v.id);
-      variantsHTML+=`<span class="variantTag ${owned?"owned":"locked"}">${v.name}</span>`;
+
+    const grid =
+        document.getElementById(
+            "dexGrid"
+        );
+
+    grid.innerHTML = "";
+
+
+    sprites.forEach(sprite => {
+
+        const card =
+            document.createElement(
+                "div"
+            );
+
+        card.className =
+            "dexCard";
+
+
+        let variantsHTML = "";
+
+        variants.forEach(v => {
+
+            const owned =
+                game.collection.includes(
+                    sprite.id +
+                    "_" +
+                    v.id
+                );
+
+            variantsHTML +=
+                `<span class="variantTag ${
+                    owned
+                        ? "owned"
+                        : "locked"
+                }">${v.name}</span>`;
+
+        });
+
+
+        let count = 0;
+
+        variants.forEach(v => {
+
+            if(
+                game.collection.includes(
+                    sprite.id +
+                    "_" +
+                    v.id
+                )
+            ){
+
+                count++;
+
+            }
+
+        });
+
+
+        let visual;
+
+
+        if(sprite.image){
+
+            visual =
+                `<img
+                    src="${sprite.image}"
+                    alt="${sprite.name}">
+                `;
+
+        }else{
+
+            visual =
+                `<div style="
+                    font-size:55px;
+                    opacity:.25">
+                    ?
+                </div>`;
+
+        }
+
+
+        const rarityClass =
+            String(
+                sprite.rarity
+            ).toLowerCase();
+
+
+        card.innerHTML = `
+
+            <div class="dexIcon">
+                ${visual}
+            </div>
+
+            <div class="dexName">
+                ${sprite.name}
+            </div>
+
+            <div
+                class="resultRarity ${rarityClass}"
+                style="
+                    font-size:11px;
+                    padding:5px 9px;
+                    margin-top:8px">
+                ${sprite.rarity}
+            </div>
+
+            <div
+                class="muted"
+                style="
+                    margin-top:10px;
+                    font-size:12px">
+                ${count} / ${Object.keys(sprite.variants || {}).length}
+                variants
+            </div>
+
+            <div class="variantList">
+                ${variantsHTML}
+            </div>
+
+        `;
+
+
+        grid.appendChild(card);
+
     });
-    let count=variants.filter(v=>game.collection.includes(sprite.id+"_"+v.id)).length;
-    let visual=sprite.image
-      ? `<img src="${sprite.image}" alt="${sprite.name}">`
-      : `<div style="font-size:55px;opacity:.25">?</div>`;
-    card.innerHTML=`
-      <div class="dexIcon">${visual}</div>
-      <div class="dexName">${sprite.name}</div>
-      <div class="resultRarity ${sprite.rarity}" style="font-size:11px;padding:5px 9px;margin-top:8px">${sprite.rarity}</div>
-      <div class="muted" style="margin-top:10px;font-size:12px">${sprite.image?count:0} / ${variants.length} variants</div>
-      <div class="variantList">${variantsHTML}</div>`;
-    grid.appendChild(card);
-  });
+
 }
+
+
+/* =========================
+   ACCOUNT
+========================= */
 
 async function createAccount(){
 
-  const email=document.getElementById("emailInput").value.trim();
-  const password=document.getElementById("passwordInput").value;
+    const email =
+        document
+            .getElementById("emailInput")
+            .value
+            .trim();
 
-  const message=document.getElementById("accountMessage");
+    const password =
+        document
+            .getElementById("passwordInput")
+            .value;
 
-  if(!email || !password){
-    message.textContent="Enter an email and password.";
-    return;
-  }
+    const message =
+        document.getElementById(
+            "accountMessage"
+        );
 
-  if(password.length < 6){
-    message.textContent="Password must be at least 6 characters.";
-    return;
-  }
 
-  const {data,error}=await supabaseClient.auth.signUp({
-    email:email,
-    password:password
-  });
+    if(!email || !password){
 
-  if(error){
-    message.textContent=error.message;
-    return;
-  }
+        message.textContent =
+            "Enter an email and password.";
 
-  message.textContent=
-    "Account created! Check your email if confirmation is required.";
+        return;
 
-  if(data.user){
-    await createPlayerData(data.user.id);
-    showLoggedIn(data.user);
-  }
+    }
+
+
+    if(password.length < 6){
+
+        message.textContent =
+            "Password must be at least 6 characters.";
+
+        return;
+
+    }
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient.auth.signUp({
+
+            email:email,
+            password:password
+
+        });
+
+
+    if(error){
+
+        message.textContent =
+            error.message;
+
+        return;
+
+    }
+
+
+    message.textContent =
+        "Account created! Check your email if confirmation is required.";
+
+
+    if(data.user){
+
+        await createPlayerData(
+            data.user.id
+        );
+
+        if(data.session){
+
+            showLoggedIn(
+                data.user
+            );
+
+        }
+
+    }
+
 }
 
+
+/* =========================
+   LOGIN
+========================= */
 
 async function loginAccount(){
 
-  const email=document.getElementById("emailInput").value.trim();
-  const password=document.getElementById("passwordInput").value;
+    const email =
+        document
+            .getElementById("emailInput")
+            .value
+            .trim();
 
-  const message=document.getElementById("accountMessage");
+    const password =
+        document
+            .getElementById("passwordInput")
+            .value;
 
-  const {data,error}=await supabaseClient.auth.signInWithPassword({
-    email:email,
-    password:password
-  });
-
-  if(error){
-    message.textContent=error.message;
-    return;
-  }
-
-  message.textContent="Logged in!";
-
-  showLoggedIn(data.user);
-
-  await loadCloudGame();
-}
+    const message =
+        document.getElementById(
+            "accountMessage"
+        );
 
 
-async function logoutAccount(){
+    if(!email || !password){
 
-  await supabaseClient.auth.signOut();
+        message.textContent =
+            "Enter your email and password.";
 
-  document.getElementById("loggedOutArea").style.display="block";
-  document.getElementById("loggedInArea").style.display="none";
-}
+        return;
 
-
-function showLoggedIn(user){
-
-  document.getElementById("loggedOutArea").style.display="none";
-  document.getElementById("loggedInArea").style.display="block";
-
-  document.getElementById("accountEmail").textContent=user.email;
-}
+    }
 
 
-async function createPlayerData(userID){
+    const {
+        data,
+        error
+    } =
+        await supabaseClient.auth
+            .signInWithPassword({
 
-  const {data,error}=await supabaseClient
-    .from("players")
-    .insert({
-      id:userID,
-      level:game.level,
-      coins:game.coins,
-      xp:game.xp,
-      keys:game.keys,
-      dust:game.dust,
-      collection:game.collection
-    });
+                email:email,
+                password:password
 
-  if(error){
-    console.error("Could not create player:",error);
-  }
-}
+            });
 
 
-async function saveCloudGame(){
+    if(error){
 
-  const {data:{user}}=await supabaseClient.auth.getUser();
+        message.textContent =
+            error.message;
 
-  if(!user){
-    alert("You need to log in first.");
-    return;
-  }
+        return;
 
-  const {error}=await supabaseClient
-    .from("players")
-    .upsert({
-      id:user.id,
-      level:game.level,
-      coins:game.coins,
-      xp:game.xp,
-      keys:game.keys,
-      dust:game.dust,
-      collection:game.collection
-    });
-
-  if(error){
-    console.error(error);
-    alert("Could not save game.");
-    return;
-  }
-
-  saveGame();
-
-  alert("Game saved to the cloud! ☁️");
-}
+    }
 
 
-async function loadCloudGame(){
+    message.textContent =
+        "Logged in!";
 
-  const {data:{user}}=await supabaseClient.auth.getUser();
 
-  if(!user)return;
-
-  const {data,error}=await supabaseClient
-    .from("players")
-    .select("*")
-    .eq("id",user.id)
-    .single();
-
-  if(error){
-    console.error("Could not load player:",error);
-    return;
-  }
-
-  if(!data)return;
-
-  game.level=data.level ?? 1;
-  game.coins=data.coins ?? 100;
-  game.xp=data.xp ?? 0;
-  game.keys=data.keys ?? 10;
-  game.dust=data.dust ?? 0;
-  game.collection=data.collection ?? [];
-
-  saveGame();
-  updateUI();
-  renderDex();
-}
-
-loadGame();
-updateUI();
-renderDex();
-
-supabaseClient.auth.getSession().then(async ({data}) => {
-
-  if(data.session && data.session.user){
-
-    showLoggedIn(data.session.user);
+    showLoggedIn(
+        data.user
+    );
 
     await loadCloudGame();
 
-  }
+}
 
-});
 
-setInterval(saveGame,10000);
-setInterval(saveGame,10000);
-setInterval(updateDailyReward,60000);
+/* =========================
+   LOGOUT
+========================= */
+
+async function logoutAccount(){
+
+    await supabaseClient.auth.signOut();
+
+    document.getElementById(
+        "loggedOutArea"
+    ).style.display = "block";
+
+    document.getElementById(
+        "loggedInArea"
+    ).style.display = "none";
+
+}
+
+
+/* =========================
+   SHOW ACCOUNT
+========================= */
+
+function showLoggedIn(user){
+
+    document.getElementById(
+        "loggedOutArea"
+    ).style.display = "none";
+
+    document.getElementById(
+        "loggedInArea"
+    ).style.display = "block";
+
+    document.getElementById(
+        "accountEmail"
+    ).textContent =
+        user.email;
+
+}
+
+
+/* =========================
+   CREATE PLAYER
+========================= */
+
+async function createPlayerData(userID){
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("players")
+            .upsert({
+
+                id:userID,
+                level:game.level,
+                coins:game.coins,
+                xp:game.xp,
+                keys:game.keys,
+                dust:game.dust,
+                collection:game.collection
+
+            });
+
+
+    if(error){
+
+        console.error(
+            "Could not create player:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================
+   CLOUD SAVE
+========================= */
+
+async function saveCloudGame(){
+
+    const {
+        data:{user}
+    } =
+        await supabaseClient.auth
+            .getUser();
+
+
+    if(!user){
+
+        alert(
+            "You need to log in first."
+        );
+
+        return;
+
+    }
+
+
+    const {
+        error
+    } =
+        await supabaseClient
+            .from("players")
+            .upsert({
+
+                id:user.id,
+                level:game.level,
+                coins:game.coins,
+                xp:game.xp,
+                keys:game.keys,
+                dust:game.dust,
+                collection:game.collection
+
+            });
+
+
+    if(error){
+
+        console.error(error);
+
+        alert(
+            "Could not save game."
+        );
+
+        return;
+
+    }
+
+
+    saveGame();
+
+    alert(
+        "Game saved to the cloud! ☁️"
+    );
+
+}
+
+
+/* =========================
+   CLOUD LOAD
+========================= */
+
+async function loadCloudGame(){
+
+    const {
+        data:{user}
+    } =
+        await supabaseClient.auth
+            .getUser();
+
+
+    if(!user)return;
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("players")
+            .select("*")
+            .eq("id",user.id)
+            .maybeSingle();
+
+
+    if(error){
+
+        console.error(
+            "Could not load player:",
+            error
+        );
+
+        return;
+
+    }
+
+
+    if(!data){
+
+        await createPlayerData(
+            user.id
+        );
+
+        return;
+
+    }
+
+
+    game.level =
+        data.level ?? 1;
+
+    game.coins =
+        data.coins ?? 100;
+
+    game.xp =
+        data.xp ?? 0;
+
+    game.keys =
+        data.keys ?? 10;
+
+    game.dust =
+        data.dust ?? 0;
+
+    game.collection =
+        Array.isArray(data.collection)
+            ? data.collection
+            : [];
+
+
+    saveGame();
+    updateUI();
+    renderDex();
+
+}
+
+
+/* =========================
+   START GAME
+========================= */
+
+loadGame();
+
+updateUI();
+
+renderDex();
+
+
+/* =========================
+   CHECK LOGIN SESSION
+========================= */
+
+supabaseClient.auth
+    .getSession()
+    .then(async ({data}) => {
+
+        if(
+            data.session &&
+            data.session.user
+        ){
+
+            showLoggedIn(
+                data.session.user
+            );
+
+            await loadCloudGame();
+
+        }
+
+    });
+
+
+/* =========================
+   AUTO SAVE
+========================= */
+
+setInterval(
+    saveGame,
+    10000
+);
+
+setInterval(
+    updateDailyReward,
+    60000);
+
 </script>
+
 </body>
 </html>
