@@ -1004,105 +1004,9 @@ body{
       <div class="futureCard"><div>🏆</div><strong>Clan Rankings</strong><p class="muted">Compete with other clans.</p></div>
     </div>
   </div>
+ </section>
+
 </section>
-<section class="screen" id="shopScreen">
-  <div class="homeContainer">
-
-    <h1 class="screenTitle">✨ Sprite Dust Shop</h1>
-    <p class="screenSubtitle">
-      Turn your Sprite Dust into keys.
-    </p>
-
-    <div class="homeGrid" style="margin-top:30px">
-
-      <div class="homeCard" style="text-align:center">
-        <div style="font-size:55px">🔑</div>
-
-        <h2 style="margin:15px 0 8px">
-          1 Key
-        </h2>
-
-        <p class="muted">
-          100 ✨ Sprite Dust
-        </p>
-
-        <button
-          class="continueButton"
-          onclick="buyKeys(1)"
-          style="margin-top:20px">
-          Buy 1 Key
-        </button>
-      </div>
-
-      <section class="screen" id="accountScreen">
-  <div class="homeContainer">
-
-    <h1 class="screenTitle">👤 SpriteBound Account</h1>
-    <p class="screenSubtitle">
-      Save your progress and play on multiple devices.
-    </p>
-
-    <div class="homeCard" style="max-width:500px;margin:30px auto;text-align:center">
-
-      <div id="loggedOutArea">
-
-        <input
-          id="emailInput"
-          type="email"
-          placeholder="Email"
-          style="width:100%;padding:14px;margin-bottom:10px;border-radius:10px;border:1px solid #34415f;background:#1a2540;color:white;"
-        >
-
-        <input
-          id="passwordInput"
-          type="password"
-          placeholder="Password"
-          style="width:100%;padding:14px;margin-bottom:15px;border-radius:10px;border:1px solid #34415f;background:#1a2540;color:white;"
-        >
-
-        <button class="continueButton" onclick="createAccount()">
-          Create Account
-        </button>
-
-        <button class="continueButton" onclick="loginAccount()" style="margin-left:8px">
-          Login
-        </button>
-
-        <p id="accountMessage" class="muted" style="margin-top:15px"></p>
-
-      </div>
-
-      <div id="loggedInArea" style="display:none">
-
-        <h2>You're logged in! ✅</h2>
-
-        <p id="accountEmail" class="muted" style="margin:10px 0 20px"></p>
-
-        <button class="continueButton" onclick="saveCloudGame()">
-          ☁️ Save Game
-        </button>
-
-        <button class="continueButton" onclick="loadCloudGame()" style="margin-left:8px">
-          ☁️ Load Game
-        </button>
-
-        <br>
-
-        <button
-          class="continueButton"
-          onclick="logoutAccount()"
-          style="margin-top:15px;background:#34415f;color:white"
-        >
-          Logout
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
-</section>
-
       <div class="homeCard" style="text-align:center">
         <div style="font-size:55px">🔑🔑🔑🔑🔑</div>
 
@@ -1140,6 +1044,95 @@ body{
           style="margin-top:20px">
           Buy 10 Keys
         </button>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+<section class="screen" id="accountScreen">
+  <div class="homeContainer">
+
+    <h1 class="screenTitle">👤 SpriteBound Account</h1>
+
+    <p class="screenSubtitle">
+      Save your progress and play on multiple devices.
+    </p>
+
+    <div class="homeCard" style="max-width:500px;margin:30px auto;text-align:center">
+
+      <!-- LOGGED OUT -->
+      <div id="loggedOutArea">
+
+        <input
+          id="emailInput"
+          type="email"
+          placeholder="Email"
+          style="width:100%;padding:14px;margin-bottom:10px;border-radius:10px;border:1px solid #34415f;background:#1a2540;color:white;"
+        >
+
+        <input
+          id="passwordInput"
+          type="password"
+          placeholder="Password"
+          style="width:100%;padding:14px;margin-bottom:15px;border-radius:10px;border:1px solid #34415f;background:#1a2540;color:white;"
+        >
+
+        <button
+          class="continueButton"
+          onclick="createAccount()">
+          Create Account
+        </button>
+
+        <button
+          class="continueButton"
+          onclick="loginAccount()"
+          style="margin-left:8px">
+          Login
+        </button>
+
+        <p
+          id="accountMessage"
+          class="muted"
+          style="margin-top:15px">
+        </p>
+
+      </div>
+
+
+      <!-- LOGGED IN -->
+      <div id="loggedInArea" style="display:none">
+
+        <h2>You're logged in! ✅</h2>
+
+        <p
+          id="accountEmail"
+          class="muted"
+          style="margin:10px 0 20px">
+        </p>
+
+        <button
+          class="continueButton"
+          onclick="saveCloudGame()">
+          ☁️ Save Game
+        </button>
+
+        <button
+          class="continueButton"
+          onclick="loadCloudGame()"
+          style="margin-left:8px">
+          ☁️ Load Game
+        </button>
+
+        <br>
+
+        <button
+          class="continueButton"
+          onclick="logoutAccount()"
+          style="margin-top:15px;background:#34415f;color:white">
+          Logout
+        </button>
+
       </div>
 
     </div>
