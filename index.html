@@ -3008,16 +3008,13 @@ async function createAccount(){
     }
 
 
-    const {
-        data,
-        error
-    } =
-        await supabaseClient.auth.signUp({
-
-            email:email,
-            password:password
-
-        });
+    const {data,error}=await supabaseClient.auth.signUp({
+  email: email,
+  password: password,
+  options: {
+    emailRedirectTo: "https://brycedesilva274-tech.github.io/Sprite-Bound/"
+  }
+});
 
 
     if(error){
