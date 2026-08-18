@@ -1930,6 +1930,71 @@ function saveGame(){
     scheduleCloudSave();
 }
 
+let cloudSaveTimer = null;
+let cloudSaveRunning = false;
+
+function scheduleCloudSave(){
+
+    // Don't do anything if Supabase isn't ready
+    if(!supabaseClient) return;
+
+    // Cancel an existing scheduled save
+    if(cloudSaveTimer){
+        clearTimeout(cloudSaveTimer);
+    }
+
+    // Wait 1.5 seconds before saving
+    // This prevents dozens of cloud requests happening at once
+    cloudSaveTimer = setTimeout(async ()=>{
+
+        if(cloudSaveRunning) return;
+
+        try{
+
+            const {data:{user}} =
+                await supabaseClient.auth.getUser();
+
+            if(!user) return;
+
+            cloudSaveRunning = true;
+
+            const {error} =
+                await supabaseClient
+                    .from("players")
+                    .upsert({
+                        id:user.id,
+                        level:game.level,
+                        coins:game.coins,
+                        xp:game.xp,
+                        keys:game.keys,
+                        dust:game.dust,
+                        collection:game.collection
+                    });
+
+            if(error){
+                console.error(
+                    "Automatic cloud save failed:",
+                    error
+                );
+            }else{
+                console.log("☁️ Cloud save successful");
+            }
+
+        }catch(error){
+
+            console.error(
+                "Automatic cloud save error:",
+                error
+            );
+
+        }finally{
+
+            cloudSaveRunning = false;
+
+        }
+
+    },1500);
+}
 
 function loadGame(){
 
