@@ -1920,12 +1920,14 @@ let chestBusy = false;
 ========================= */
 
 function saveGame(){
-
+    // Always save locally
     localStorage.setItem(
         "spriteBoundSave",
         JSON.stringify(game)
     );
 
+    // Also schedule a cloud save if logged in
+    scheduleCloudSave();
 }
 
 
