@@ -1903,7 +1903,7 @@ let game = {
     level:1,
     coins:100,
     xp:0,
-    keys:10,
+    keys:10000000,
     dust:0,
     collection:[],
     lastDailyReward:0
@@ -2010,7 +2010,7 @@ function loadGame(){
         game.level = d.level ?? 1;
         game.coins = d.coins ?? 100;
         game.xp = d.xp ?? 0;
-        game.keys = d.keys ?? 10;
+        game.keys = d.keys ?? 100000;
         game.dust = d.dust ?? 0;
         game.collection = d.collection ?? [];
         game.lastDailyReward = d.lastDailyReward ?? 0;
@@ -2061,7 +2061,7 @@ function claimDailyReward(){
         return;
     }
 
-    game.keys += 3;
+    game.keys += 100000;
     game.lastDailyReward = now;
 
     saveGame();
@@ -2689,9 +2689,9 @@ function buyKeys(amount){
 
     const prices = {
 
-        1:100,
-        5:450,
-        10:800
+        1:1,
+        5:4,
+        10:8
 
     };
 
@@ -3388,7 +3388,7 @@ async function loadCloudGame(){
         data.xp ?? 0;
 
     game.keys =
-        data.keys ?? 10;
+        data.keys ?? 1000000;
 
     game.dust =
         data.dust ?? 0;
